@@ -9,7 +9,6 @@
 	"license": "ISC",
 	"description": "",
 	"devDependencies": {
-		"@mridang/semantic-release-peer-version": "^1.0.1",
 		"@semantic-release/commit-analyzer": "^13.0.1",
 		"@semantic-release/git": "^10.0.1",
 		"@semantic-release/github": "^10.0.5",
