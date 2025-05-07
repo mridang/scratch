@@ -4,6 +4,13 @@ module.exports = {
 	branches: ['master'],
 	plugins: [
 		'@semantic-release/commit-analyzer',
+		[
+			'@mridang/semantic-release-peer-version',
+			{
+				repo: 'zitadel/zitadel',
+				branch: 'main',
+			}
+		],
 		'@semantic-release/release-notes-generator',
 		[
 			'@semantic-release/github',
