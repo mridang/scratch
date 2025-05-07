@@ -7,8 +7,7 @@ module.exports = {
 		[
 			'@mridang/semantic-release-peer-version',
 			{
-				repo: 'zitadel/zitadel',
-				branch: 'main',
+				repo: 'zitadel/zitadel'
 			}
 		],
 		'@semantic-release/release-notes-generator',
