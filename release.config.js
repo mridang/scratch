@@ -20,5 +20,5 @@ module.exports = {
 			},
 		],
 	],
-	repositoryUrl: packageJson.repository.url,
+	repositoryUrl: "git+https://github.com/mridang/scratch.git"
 };
