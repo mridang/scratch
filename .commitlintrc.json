@@ -1,12 +1,21 @@
 {
-  "extends": [
-    "@commitlint/config-conventional"
-  ],
-  "rules": {
-    "body-max-line-length": [
-      2,
-      "always",
-      200
-    ]
-  }
+	"extends": ["@commitlint/config-conventional"],
+	"plugins": ["@mridang/conditionals"],
+	"rules": {
+		"body-max-line-length": [0, "always"],
+		"ignore-for-authors": [
+			2,
+			"always",
+			{
+				"signOffPatternsToIgnore": ["Your dName"],
+				"rulesToEnforce": [
+					{
+						"packageName": "@commitlint/rules",
+						"ruleName": "body-max-line-length",
+						"value": 200
+					}
+				]
+			}
+		]
+	}
 }
