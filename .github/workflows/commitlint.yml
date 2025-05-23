@@ -29,6 +29,15 @@ jobs:
           ref: ${{ inputs.ref }}
           fetch-depth: 0
 
+      - name: Setup Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 'lts/*'
+
+      - name: Install Tool
+        run: |
+          npm install --global $(jq -r '[ (if (.extends|type) == "array" then .extends[] else .extends end)?, (.plugins[]? | if type == "string" then . else (.[0]? // "") end)? ] | map(select(. != null and . != "" and . != "null")) | unique | .[]' .commitlintrc.json | tr '\n' ' ')
+
       - name: Inspect Commits
         uses: wagoid/commitlint-github-action@b948419dd99f3fd78a6548d48f94e3df7f6bf3ed # v6.2.1
         with:
