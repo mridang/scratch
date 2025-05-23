@@ -1,11 +1,10 @@
 name: Commits
 
 on:
-  workflow_call:
-    inputs:
-      ref:
-        required: true
-        type: string
+  push:
+    branches:
+      - ${{ github.event.repository.default_branch }}
+  pull_request:
 
 permissions:
   contents: read
