@@ -3,7 +3,7 @@ name: Commits
 on:
   push:
     branches:
-      - ${{ github.event.repository.default_branch }}
+      - main
   pull_request:
 
 permissions:
