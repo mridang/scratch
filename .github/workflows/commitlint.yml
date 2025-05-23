@@ -38,6 +38,12 @@ jobs:
         run: |
           npm install --global $(jq -r '[ (if (.extends|type) == "array" then .extends[] else .extends end)?, (.plugins[]? | if type == "string" then . else (.[0]? // "") end)? ] | map(select(. != null and . != "" and . != "null")) | unique | .[]' .commitlintrc.json | tr '\n' ' ')
 
+      - name: Print NODE_PATH
+        run: echo "NODE_PATH is $(npm root -g)"
+
+      - name: List global packages
+        run: npm ls -g --depth=0
+
       - name: Inspect Commits
         uses: wagoid/commitlint-github-action@b948419dd99f3fd78a6548d48f94e3df7f6bf3ed # v6.2.1
         with:
