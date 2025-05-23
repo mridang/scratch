@@ -1,6 +1,6 @@
 {
 	"extends": ["@commitlint/config-conventional"],
-	"plugins": ["@mridang/conditionals"],
+	"plugins": ["@mridang/commitlint-plugin-conditionals"],
 	"rules": {
 		"body-max-line-length": [0, "always"],
 		"ignore-for-authors": [
