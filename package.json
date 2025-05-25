@@ -9,6 +9,7 @@
 	"license": "ISC",
 	"description": "",
 	"devDependencies": {
+		"@commitlint/config-conventional": "^19.8.1",
 		"@semantic-release/commit-analyzer": "^13.0.1",
 		"@semantic-release/git": "^10.0.1",
 		"@semantic-release/github": "^10.0.5",
