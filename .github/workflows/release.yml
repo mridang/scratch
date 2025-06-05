@@ -45,9 +45,7 @@ jobs:
         uses: mridang/action-semantic-release@master
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Run semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npx semantic-release --extends ./release.config.js
+
