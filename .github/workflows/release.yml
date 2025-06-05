@@ -11,6 +11,8 @@ permissions:
   packages: write
   issues: write
   checks: read
+  pull-requests: write
+  id-token: write
 
 defaults:
   run:
