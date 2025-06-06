@@ -21,6 +21,7 @@ defaults:
 jobs:
   publish-package:
     runs-on: ubuntu-latest
+    name: To Artifactory
 
     steps:
       - name: Checkout code
