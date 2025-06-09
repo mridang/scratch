@@ -44,6 +44,6 @@ jobs:
         run: npm ci
 
       - name: Inspect Commits
-        uses: mridang/action-semantic-release@master
+        uses: mridang/action-commit-lint@master
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
