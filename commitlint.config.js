@@ -1,4 +1,4 @@
-{
+module.exports = {
 	"extends": ["@commitlint/config-conventional"],
 	"plugins": ["@mridang/commitlint-plugin-conditionals"],
 	"rules": {
