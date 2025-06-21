@@ -32,24 +32,7 @@ jobs:
           cache: 'npm'
           node-version-file: '.nvmrc'
 
-      - name: Clean and Verbose Install Dependencies
-        run: |
-          echo "--- Forcing a clean install ---"
-          rm -rf node_modules
-          npm cache clean --force
-          npm install --verbose
-      
-      - name: Verify Plugin Installation
-        run: |
-          echo "--- Verifying the plugin files exist on disk ---"
-          # This command will list the contents of the plugin directory.
-          # If it fails with "No such file or directory", we've found the problem.
-          ls -lR ${{ github.workspace }}/node_modules/@mridang/commitlint-plugin-conditionals
-          echo "------------------------------------------------"
-
-
-
       - name: Inspect Commits
-        uses: mridang/action-commit-lint@master
+        uses: mridang/action-commit-lint@v1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
