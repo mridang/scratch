@@ -45,9 +45,8 @@ jobs:
         run: npm ci
 
       - name: Run semantic-release
-        uses: mridang/action-commit-lint@master
+        uses: mridang/action-commit-lint@v1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-
