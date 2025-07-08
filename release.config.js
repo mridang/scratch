@@ -1,7 +1,7 @@
 const packageJson = require('./package.json');
 
 module.exports = {
-	branches: ['master', { name: 'beta', prerelease: 'beta' }],
+	branches: [{ name: 'master', prerelease: 'beta' }],
 	plugins: [
 		'@semantic-release/commit-analyzer',
 		'@semantic-release/release-notes-generator',
