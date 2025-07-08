@@ -4,15 +4,9 @@ on:
   push:
     branches:
       - master
-  pull_request:
 
 permissions:
   contents: write
-  packages: write
-  issues: write
-  checks: read
-  pull-requests: write
-  id-token: write
 
 defaults:
   run:
@@ -21,7 +15,6 @@ defaults:
 jobs:
   publish-package:
     runs-on: ubuntu-latest
-    name: To Artifactory
 
     steps:
       - name: Checkout code
@@ -45,7 +38,7 @@ jobs:
         run: npm ci
 
       - name: Run semantic-release
-        uses: mridang/action-commit-lint@v1
+        uses: mridang/action-semantic-release@v1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
         env:
