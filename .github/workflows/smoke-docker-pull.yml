@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Runner common setup
-        uses: mridang/action-runner-common@v1
+        uses: mridang/action-runner-common@v1.2.0
 
       - name: Show existing images
         run: docker image ls
@@ -35,7 +35,7 @@ jobs:
     needs: cold
     steps:
       - name: Runner common setup
-        uses: mridang/action-runner-common@v1
+        uses: mridang/action-runner-common@v1.2.0
 
       - name: Show existing images (should include alpine:3.20 from cache)
         run: docker image ls

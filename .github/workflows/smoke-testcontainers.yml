@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Runner common setup
-        uses: mridang/action-runner-common@v1
+        uses: mridang/action-runner-common@v1.2.0
 
       - name: Checkout
         uses: actions/checkout@v4
@@ -50,7 +50,7 @@ jobs:
     needs: cold
     steps:
       - name: Runner common setup
-        uses: mridang/action-runner-common@v1
+        uses: mridang/action-runner-common@v1.2.0
 
       - name: Checkout
         uses: actions/checkout@v4
