@@ -1,0 +1,51 @@
+name: Smoke — docker pull cache
+
+on:
+  push:
+    branches: [runner-common-smoke]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  cold:
+    name: Cold run (cache miss expected on first ever run)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Runner common setup
+        uses: mridang/action-runner-common@v1
+
+      - name: Show existing images
+        run: docker image ls
+
+      - name: docker pull alpine:3.20 (timed)
+        run: |
+          START=$(date +%s)
+          docker pull alpine:3.20
+          END=$(date +%s)
+          echo "::notice title=Cold pull duration::$((END-START))s"
+
+      - name: Show images after pull
+        run: docker image ls
+
+  warm:
+    name: Warm run (cache hit expected)
+    runs-on: ubuntu-latest
+    needs: cold
+    steps:
+      - name: Runner common setup
+        uses: mridang/action-runner-common@v1
+
+      - name: Show existing images (should include alpine:3.20 from cache)
+        run: docker image ls
+
+      - name: docker pull alpine:3.20 (timed; should be near-instant)
+        run: |
+          START=$(date +%s)
+          docker pull alpine:3.20
+          END=$(date +%s)
+          echo "::notice title=Warm pull duration::$((END-START))s"
+
+      - name: Confirm alpine present locally
+        run: docker image inspect alpine:3.20 >/dev/null && echo "alpine:3.20 present locally"

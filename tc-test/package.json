@@ -1,0 +1,14 @@
+{
+  "name": "tc-smoke",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "test": "jest --runInBand"
+  },
+  "dependencies": {
+    "testcontainers": "^10.13.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}
