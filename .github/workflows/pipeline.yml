@@ -12,6 +12,9 @@ jobs:
     name: Dummy Job for PR and Main Branch
 
     steps:
+      - name: Runner Common Setup
+        uses: mridang/action-runner-common@v1
+
       - name: Checkout code
         uses: actions/checkout@v2
 
