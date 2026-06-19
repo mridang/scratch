@@ -1,4 +1,5 @@
 {
+  "id": "/?source=pwa",
   "name": "The Hacker Times",
   "short_name": "Hacker Times",
   "description": "A single-page newspaper auto-generated from the Hacker News front page.",

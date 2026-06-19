@@ -48,6 +48,9 @@ header.mast{text-align:center;padding:18px 0 10px;border-bottom:3px double var(-
 .switcher{display:flex;justify-content:center;gap:0;margin:12px auto 4px;border:1px solid var(--mastrule);border-radius:999px;width:max-content;overflow:hidden;}
 .switcher button{font-family:var(--serif);font-size:12px;letter-spacing:1px;text-transform:uppercase;padding:5px 16px;background:transparent;color:var(--masttext);border:none;cursor:pointer;transition:background .15s,color .15s;}
 .switcher button[aria-pressed="true"]{background:var(--masttext);color:var(--mastbg);font-weight:700;}
+.installbar{margin:9px 0 2px;}
+.install{font-family:var(--serif);font-size:12px;letter-spacing:.5px;text-transform:uppercase;font-weight:700;padding:7px 18px;background:var(--masttext);color:var(--mastbg);border:none;border-radius:999px;cursor:pointer;}
+.install[hidden]{display:none;}
 .zone{margin-top:34px;}
 .sechead{display:flex;align-items:baseline;gap:14px;border-bottom:2px solid var(--ink);padding-bottom:6px;margin-bottom:18px;flex-wrap:wrap;}
 .sechead h3{font-family:Georgia,serif;font-weight:900;font-size:26px;margin:0;letter-spacing:.5px;text-transform:uppercase;}
@@ -126,6 +129,7 @@ header.mast{text-align:center;padding:18px 0 10px;border-bottom:3px double var(-
     <button data-theme="ft" aria-pressed="true">FT</button>
     <button data-theme="economist" aria-pressed="false">Economist</button>
   </div>
+  <div class="installbar"><button id="installBtn" class="install" hidden>⬇ Install app</button></div>
 </header>
 <div class="wrap">
 <section class="zone news"><div class="sechead"><h3>The Front Page</h3><span class="secdesc">News, research & announcements from institutions, companies and the press</span><span class="seccount">13 items</span></div><div class="grid">
@@ -678,5 +682,20 @@ if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js').catch(function(e){ console.warn('SW registration failed', e); });
   });
 }
+// Install prompt: capture the event Chrome fires instead of auto-banner, surface a button.
+(function(){
+  var deferred=null, btn=document.getElementById('installBtn');
+  var standalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+  window.addEventListener('beforeinstallprompt', function(e){
+    e.preventDefault(); deferred=e; if(btn && !standalone) btn.hidden=false;
+  });
+  if(btn) btn.addEventListener('click', async function(){
+    if(!deferred) return;
+    deferred.prompt();
+    try { await deferred.userChoice; } catch(e){}
+    deferred=null; btn.hidden=true;
+  });
+  window.addEventListener('appinstalled', function(){ if(btn) btn.hidden=true; });
+})();
 </script>
 </body></html>
