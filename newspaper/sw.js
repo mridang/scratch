@@ -1,5 +1,5 @@
 // The Hacker Times — service worker
-const CACHE = 'hacker-times-v1';
+const CACHE = 'hacker-times-v2';
 const APP_SHELL = [
   './',
   './index.html',
@@ -35,8 +35,10 @@ self.addEventListener('fetch', (e) => {
     e.respondWith(
       fetch(req)
         .then((res) => {
-          const copy = res.clone();
-          caches.open(CACHE).then((c) => c.put('./index.html', copy));
+          if (res && res.ok) {            // only cache real 200s — never an error page
+            const copy = res.clone();
+            caches.open(CACHE).then((c) => c.put('./index.html', copy));
+          }
           return res;
         })
         .catch(() => caches.match(req).then((r) => r || caches.match('./index.html')))
