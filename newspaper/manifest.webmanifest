@@ -1,0 +1,16 @@
+{
+  "name": "The Hacker Times",
+  "short_name": "Hacker Times",
+  "description": "A single-page newspaper auto-generated from the Hacker News front page.",
+  "start_url": "./?source=pwa",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#990F3D",
+  "background_color": "#FFF1E5",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

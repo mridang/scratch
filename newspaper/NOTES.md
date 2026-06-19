@@ -19,3 +19,4 @@ Running notes of what was asked for, newest at the bottom.
 15. Show clean publisher/author names instead of raw domains (LLM-resolved).
 16. Keep a running notes file of requests (this file).
 17. Add a favicon per article.
+18. Make it a PWA — manifest, icons, service worker (offline + installable).
