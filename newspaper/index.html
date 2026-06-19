@@ -2,25 +2,52 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>THE HACKER TIMES — Friday, June 19, 2026</title>
 <style>
-:root{--ink:#16130f;--paper:#f5f1e8;--card:#fffdf7;--accent:#9b1b1b;--rule:#d8cfba;--muted:#7c7361;
---op:#2c4a7c;--show:#1d6b3a;--hire:#7a4d12;}
+:root{--ink:#16130f;--paper:#f5f1e8;--card:#fffdf7;--accent:#9b1b1b;--rule:#d8cfba;--muted:#7c7361;--op:#2c4a7c;--show:#1d6b3a;--hire:#7a4d12;--lane:240px;--gap:18px;}
 *{box-sizing:border-box;}
 body{margin:0;background:#cdc7b8;color:var(--ink);font-family:'Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif;}
-.wrap{max-width:1280px;margin:0 auto;padding:0 18px 70px;}
+.wrap{max-width:1320px;margin:0 auto;padding:0 18px 70px;}
 header.mast{text-align:center;padding:22px 0 10px;border-bottom:3px double var(--ink);margin-bottom:6px;background:var(--paper);}
-.mast .row{display:flex;justify-content:space-between;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);max-width:1280px;margin:0 auto;padding:0 18px;}
+.mast .row{display:flex;justify-content:space-between;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);max-width:1320px;margin:0 auto;padding:0 18px;}
 .mast h1{font-family:Georgia,'Times New Roman',serif;font-weight:900;font-size:clamp(40px,8vw,92px);letter-spacing:-2px;margin:6px 0 2px;line-height:.95;}
 .mast .tag{font-style:italic;color:#3a342a;font-size:14px;margin:2px 0 10px;}
-.mast .date{display:flex;justify-content:center;gap:18px;flex-wrap:wrap;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);padding:5px 0;max-width:1280px;margin:8px auto 0;}
+.mast .date{display:flex;justify-content:center;gap:18px;flex-wrap:wrap;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);padding:5px 0;max-width:1320px;margin:8px auto 0;}
 .zone{margin-top:34px;}
 .sechead{display:flex;align-items:baseline;gap:14px;border-bottom:2px solid var(--ink);padding-bottom:6px;margin-bottom:18px;flex-wrap:wrap;}
 .sechead h3{font-family:Georgia,serif;font-weight:900;font-size:26px;margin:0;letter-spacing:.5px;text-transform:uppercase;}
 .secdesc{font-style:italic;color:var(--muted);font-size:13px;flex:1;min-width:160px;}
 .seccount{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);}
 .zone.opinion .sechead h3{color:var(--op);} .zone.show .sechead h3{color:var(--show);} .zone.hiring .sechead h3{color:var(--hire);}
-.grid{columns:4 280px;column-gap:18px;}
-@media(max-width:1100px){.grid{columns:3 260px;}} @media(max-width:760px){.grid{columns:2 220px;}} @media(max-width:480px){.grid{columns:1;}}
-.card{position:relative;break-inside:avoid;background:var(--card);margin:0 0 18px;border:1px solid var(--rule);border-radius:3px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.08);transition:transform .15s,box-shadow .15s;}
+
+/* ===== LAYOUT ENGINE =====
+   Universal fallback: multicolumn masonry. */
+.grid{columns:var(--lane);column-gap:var(--gap);}
+.card{break-inside:avoid;margin:0 0 var(--gap);}
+.card.feature{column-span:all;}
+
+/* CSS Grid Level 3 — "grid lanes" (Safari Tech Preview / iOS): real masonry packing + lane spanning */
+@supports (display:grid-lanes){
+  .grid{display:grid-lanes;columns:initial;grid-template-columns:repeat(auto-fill,minmax(var(--lane),1fr));gap:var(--gap);}
+  .card{margin:0;}
+  .card.feature{column-span:initial;grid-column:span 2;}
+  @media(min-width:1080px){.card.feature{grid-column:span 3;}}
+  @media(min-width:1380px){.card.feature{grid-column:span 4;}}
+}
+/* Standard masonry syntax (Firefox flag / future browsers) */
+@supports (grid-template-rows:masonry){
+  .grid{display:grid;columns:initial;grid-template-columns:repeat(auto-fill,minmax(var(--lane),1fr));grid-template-rows:masonry;gap:var(--gap);}
+  .card{margin:0;}
+  .card.feature{column-span:initial;grid-column:span 2;}
+  @media(min-width:1080px){.card.feature{grid-column:span 3;}}
+}
+@supports (display:masonry){
+  .grid{display:masonry;columns:initial;grid-template-columns:repeat(auto-fill,minmax(var(--lane),1fr));gap:var(--gap);}
+  .card{margin:0;}
+  .card.feature{column-span:initial;grid-column:span 2;}
+  @media(min-width:1080px){.card.feature{grid-column:span 3;}}
+}
+
+/* ===== CARD CHROME ===== */
+.card{position:relative;background:var(--card);border:1px solid var(--rule);border-radius:3px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.08);transition:transform .15s,box-shadow .15s;}
 .card:hover{transform:translateY(-3px);box-shadow:0 8px 22px rgba(0,0,0,.18);}
 .hit{position:absolute;inset:0;z-index:3;}
 .thumb{width:100%;background:#e9e3d4;line-height:0;border-bottom:1px solid var(--rule);}
@@ -31,23 +58,29 @@ header.mast{text-align:center;padding:22px 0 10px;border-bottom:3px double var(-
 .kicker .score{margin-left:auto;color:var(--accent);font-weight:700;}
 .badge{font-weight:700;padding:1px 6px;border-radius:2px;color:#fff;font-size:9px;}
 .badge.op{background:var(--op);} .badge.show{background:var(--show);} .badge.hire{background:var(--hire);}
-.hl{font-size:19px;line-height:1.15;margin:2px 0 6px;font-weight:700;}
+.hl{font-size:19px;line-height:1.15;margin:2px 0 6px;font-weight:700;text-wrap:balance;}
 .byline{font-size:11px;font-style:italic;color:var(--op);margin-bottom:6px;}
 .ex{font-size:13px;line-height:1.5;color:#2c2820;margin:0 0 10px;text-align:justify;hyphens:auto;}
 .sec-opinion .ex{font-style:italic;}
 .more{font-size:11px;font-weight:700;letter-spacing:.5px;color:var(--accent);text-transform:uppercase;}
 .sec-opinion{border-left:3px solid var(--op);} .sec-show{border-left:3px solid var(--show);}
-.card.feature{column-span:all;display:grid;grid-template-columns:1.1fr 1fr;gap:0;margin-bottom:22px;border:2px solid var(--ink);}
+
+/* Feature: image beside text */
+.card.feature{display:grid;grid-template-columns:1.1fr 1fr;}
 .card.feature .thumb{height:100%;border-bottom:none;border-right:1px solid var(--rule);}
 .card.feature .thumb img{height:100%;object-fit:cover;}
 .card.feature .meat{padding:22px 26px;align-self:center;}
-.card.feature .hl{font-size:clamp(24px,3vw,38px);line-height:1.05;} .card.feature .ex{font-size:15px;}
-@media(max-width:720px){.card.feature{grid-template-columns:1fr;}.card.feature .thumb{border-right:none;border-bottom:1px solid var(--rule);}}
+.card.feature .hl{font-size:clamp(24px,3vw,40px);line-height:1.05;}
+.card.feature .ex{font-size:15px;}
+.card.feature.noimg{grid-template-columns:1fr;}
+@media(max-width:640px){.card.feature{grid-template-columns:1fr;}.card.feature .thumb{border-right:none;border-bottom:1px solid var(--rule);}}
 .card.noimg .meat{border-top:4px solid var(--ink);}
+
 .classifieds{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:0;border:1px solid var(--ink);background:var(--card);}
 .job{display:flex;justify-content:space-between;gap:10px;padding:12px 16px;border-bottom:1px dashed var(--rule);text-decoration:none;color:var(--ink);}
 .job:hover{background:#f0ead9;} .jt{font-weight:700;font-size:14px;} .jd{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;}
 .foot{text-align:center;font-size:11px;color:var(--muted);margin-top:40px;border-top:3px double var(--ink);padding-top:14px;}
+.enginenote{text-align:center;font-size:10px;color:var(--muted);margin-top:6px;font-style:italic;}
 </style></head>
 <body>
 <header class="mast">
@@ -64,7 +97,6 @@ header.mast{text-align:center;padding:22px 0 10px;border-bottom:3px double var(-
       <div class="meat">
         <div class="kicker"><span class="num">15</span> cs.cornell.edu <span class="score">▲ 355</span></div>
         <h2 class="hl">CS 6120: Advanced Compilers: The Self-Guided Online Course (2020)</h2>
-        
         <p class="ex">CS 6120 is a PhD-level Cornell CS course by Adrian Sampson on programming language implementation.
 It covers universal compilers topics like intermediate representations, data flow, and “classic” optimizations as well as more research-flavored topics such as parallelization, just-in-time compilation, and garbage collection.
 The work consists of reading papers and open-source hacking tasks, which use LLVM and an educational IR invented just for this class . This page lists the curriculum for following this course at the university of your imagination, for four imagination credits (ungraded).
@@ -78,7 +110,6 @@ There’s a linear timeline of lessons…</p>
       <div class="meat">
         <div class="kicker"><span class="num">14</span> blog.ui.com <span class="score">▲ 321</span></div>
         <h2 class="hl">Ubiquiti: Enterprise NAS, Built on ZFS</h2>
-        
         <p class="ex">Enterprise storage has traditionally required costly licensing, proprietary hardware, and complex management. ENAS changes that by delivering a private, local storage platform designed for performance, scalability, and simplicity, all without the overhead typically associated with enterprise infrastructure. The all-new ENAS combines powerful hardware with modern storage technologies to provide the performance and…</p>
         <span class="more">Read full story ↗</span>
       </div>
@@ -89,7 +120,6 @@ There’s a linear timeline of lessons…</p>
       <div class="meat">
         <div class="kicker"><span class="num">08</span> blog.modelcontextprotocol.io <span class="score">▲ 182</span></div>
         <h2 class="hl">Zero-Touch OAuth for MCP</h2>
-        
         <p class="ex">Per-user auth is high friction Authorize once, inherit everywhere The Enterprise-Managed Authorization extension is now stable. Organizations can centrally
 manage authorization for MCP servers and end-users can access all connected MCP servers
 through a single log in. The extension is being adopted by Anthropic, Microsoft, Okta and
@@ -103,7 +133,6 @@ a growing number of MCP servers. The Enterprise-Managed Authorization (EMA) exte
       <div class="meat">
         <div class="kicker"><span class="num">03</span> news.mit.edu <span class="score">▲ 154</span></div>
         <h2 class="hl">To study how chips work, MIT researchers built their own OS</h2>
-        
         <p class="ex">A new kernel, or core program within an operating system, gives researchers a cleaner view of what’s happening inside a processor. Called Fractal and developed at MIT, the kernel has already surfaced previously unknown behavior in Apple’s M1. When security researchers want to understand what a modern processor is really doing with the kind of detail that determines whether attacks like Spectre and Meltdown are…</p>
         <span class="more">Read full story ↗</span>
       </div>
@@ -114,7 +143,6 @@ a growing number of MCP servers. The Enterprise-Managed Authorization (EMA) exte
       <div class="meat">
         <div class="kicker"><span class="num">18</span> letsencrypt.status.io <span class="score">▲ 131</span></div>
         <h2 class="hl">Many Let&#x27;s Encrypt renewals had errors today</h2>
-        
         <p class="ex">Updated a few seconds ago acme-v02.api.letsencrypt.org (Production), portal.letsencrypt.org (Production) High Assurance Datacenter 1, High Assurance Datacenter 2 acme-v02.api.letsencrypt.org (Production) acme-staging-v02.api.letsencrypt.org (Staging) portal.letsencrypt.org (Production) portal-staging.letsencrypt.org (Staging) *.c.lencr.org (Production) stg-*.c.lencr.org (Staging) log.twig.ct.letsencrypt.org…</p>
         <span class="more">Read full story ↗</span>
       </div>
@@ -125,7 +153,6 @@ a growing number of MCP servers. The Enterprise-Managed Authorization (EMA) exte
       <div class="meat">
         <div class="kicker"><span class="num">12</span> jacc.org <span class="score">▲ 121</span></div>
         <h2 class="hl">Ice water drowning survival of young patient (2025)</h2>
-        
         <p class="ex">Full text unavailable (page blocked / paywalled). Follow the link to read at the source.</p>
         <span class="more">Read full story ↗</span>
       </div>
@@ -136,7 +163,6 @@ a growing number of MCP servers. The Enterprise-Managed Authorization (EMA) exte
       <div class="meat">
         <div class="kicker"><span class="num">17</span> americanexpress.io <span class="score">▲ 117</span></div>
         <h2 class="hl">Cell-based architecture for resilient payment systems</h2>
-        
         <p class="ex">Architecture Payments Resiliency The American Express core payments ecosystem is a global platform relied on by Card Members and partners around the
               world. Every day, it processes live payment transactions that require high availability, low latency, and
               predictable performance. Resiliency is not an afterthought; it has been encoded into the system’s design from the beginning. Localized…</p>
@@ -149,7 +175,6 @@ a growing number of MCP servers. The Enterprise-Managed Authorization (EMA) exte
       <div class="meat">
         <div class="kicker"><span class="num">02</span> greybeam.ai <span class="score">▲ 114</span></div>
         <h2 class="hl">DuckDB Internals: Why Is DuckDB Fast? (Part 1)</h2>
-        
         <p class="ex">DuckDB has gone from a research project at CWI Amsterdam in 2019 to one of the most widely adopted databases of the past decade. The list of places it shows up is long: notebooks, ETL pipelines, dashboards, CI test runners, embedded analytics inside SaaS products, even an iPhone running TPC-H at scale factor 100 . Companies have started building real products around it. MotherDuck is wrapping DuckDB into a cloud…</p>
         <span class="more">Read full story ↗</span>
       </div>
@@ -160,7 +185,6 @@ a growing number of MCP servers. The Enterprise-Managed Authorization (EMA) exte
       <div class="meat">
         <div class="kicker"><span class="num">10</span> darpa.mil <span class="score">▲ 15</span></div>
         <h2 class="hl">DARPA Heavy Lift Challenge</h2>
-        
         <p class="ex">What better place to showcase aviation history in the making than at the world&#x27;s largest military aviation museum! | 0:30 DARPA Challenges incentivize researchers from across academia, government, commercial, and defense communities to develop non-traditional or unexpected solutions to grand national security challenges, through cash prizes. Prizes encourage thinking outside the box and broad participation by…</p>
         <span class="more">Read full story ↗</span>
       </div>
@@ -171,8 +195,7 @@ a growing number of MCP servers. The Enterprise-Managed Authorization (EMA) exte
       <div class="meat">
         <div class="kicker"><span class="num">07</span> orchidfiles.com <span class="badge op">Column</span><span class="score">▲ 769</span></div>
         <h2 class="hl">I found 10k GitHub repositories distributing Trojan malware</h2>
-        <div class="byline">Opinion · orchidfiles.com</div>
-        <p class="ex">This is the story of how I found 10,000 repositories on GitHub that distribute Trojan malware. They are all from different contributors, have different names, and are not forks of other repositories. But they share a common pattern, which is what allowed me to write a script to find such repositories. I have a project on GitHub, and I wanted to check whether search engines had indexed it. I typed the project name into Google, and my repository appeared in the results. I entered the same query into Bing, and someone else’s repository appeared in the results, with the exact same name and description. It was a copy of my repository…</p>
+        <div class="byline">Opinion · orchidfiles.com</div><p class="ex">This is the story of how I found 10,000 repositories on GitHub that distribute Trojan malware. They are all from different contributors, have different names, and are not forks of other repositories. But they share a common pattern, which is what allowed me to write a script to find such repositories. I have a project on GitHub, and I wanted to check whether search engines had indexed it. I typed the project name into Google, and my repository appeared in the results. I entered the same query into Bing, and someone else’s repository appeared in the results, with the exact same name and description. It was a copy of my repository…</p>
         <span class="more">Read full story ↗</span>
       </div>
     </article>
@@ -182,8 +205,7 @@ a growing number of MCP servers. The Enterprise-Managed Authorization (EMA) exte
       <div class="meat">
         <div class="kicker"><span class="num">19</span> arun.is <span class="badge op">Column</span><span class="score">▲ 83</span></div>
         <h2 class="hl">How Japan&#x27;s railways stayed one while splitting apart</h2>
-        <div class="byline">Opinion · arun.is</div>
-        <p class="ex">On my first trip to Japan, I brought along a JR Rail Pass to take advantage of
+        <div class="byline">Opinion · arun.is</div><p class="ex">On my first trip to Japan, I brought along a JR Rail Pass to take advantage of
 the subsidized rail transport for tourists. After riding the JR Yamanote Line
 and the Tōkaidō Shinkansen, I assumed JR must be a single national train system. But I soon learned it’s far from that. The Yamanote Line is run by the East
 Japan Railway Company — JR East — and the Tōkaidō Shinkansen by JR Central. And
@@ -197,8 +219,7 @@ each of these JR…</p>
       <div class="meat">
         <div class="kicker"><span class="num">09</span> simonwillison.net <span class="badge op">Column</span><span class="score">▲ 70</span></div>
         <h2 class="hl">Datasette Apps: Host custom HTML applications inside Datasette</h2>
-        <div class="byline">Opinion · simonwillison.net</div>
-        <p class="ex">Today we launched a new plugin for Datasette, datasette-apps , with this launch announcement post on the Datasette project blog. That post has the what , but I’m going to expand on that a little bit here to provide the why . Datasette Apps are self-contained HTML+JavaScript applications that run in a tightly constrained &lt;iframe&gt; sandbox hosted on your Datasette application. They can use JavaScript to run read-only…</p>
+        <div class="byline">Opinion · simonwillison.net</div><p class="ex">Today we launched a new plugin for Datasette, datasette-apps , with this launch announcement post on the Datasette project blog. That post has the what , but I’m going to expand on that a little bit here to provide the why . Datasette Apps are self-contained HTML+JavaScript applications that run in a tightly constrained &lt;iframe&gt; sandbox hosted on your Datasette application. They can use JavaScript to run read-only…</p>
         <span class="more">Read full story ↗</span>
       </div>
     </article>
@@ -208,8 +229,7 @@ each of these JR…</p>
       <div class="meat">
         <div class="kicker"><span class="num">11</span> dfdxlabs.com <span class="badge op">Column</span><span class="score">▲ 68</span></div>
         <h2 class="hl">Building a robotics research setup that lives next to my desk</h2>
-        <div class="byline">Opinion · dfdxlabs.com</div>
-        <p class="ex">Robotics research has become cheap and accessible enough that small teams, and even individuals, can now do meaningful research on real hardware. There are two reasons for this. First, capable robot hardware has become dramatically more affordable: the physical setup below uses an industrial-grade arm, two cameras, and a full teleoperation setup while staying below €5,000. 1 1 This figure excludes VAT and the cost…</p>
+        <div class="byline">Opinion · dfdxlabs.com</div><p class="ex">Robotics research has become cheap and accessible enough that small teams, and even individuals, can now do meaningful research on real hardware. There are two reasons for this. First, capable robot hardware has become dramatically more affordable: the physical setup below uses an industrial-grade arm, two cameras, and a full teleoperation setup while staying below €5,000. 1 1 This figure excludes VAT and the cost…</p>
         <span class="more">Read full story ↗</span>
       </div>
     </article>
@@ -219,8 +239,7 @@ each of these JR…</p>
       <div class="meat">
         <div class="kicker"><span class="num">05</span> mickael.canouil.fr <span class="badge op">Column</span><span class="score">▲ 57</span></div>
         <h2 class="hl">Gribouille 0.3.0: A Grammar of Graphics for Typst</h2>
-        <div class="byline">Opinion · mickael.canouil.fr</div>
-        <p class="ex">Another week, another Gribouille release. Gribouille 0.3.0 is narrower in scope than 0.2 , but it brings some wanted controls. The headline is guide control: a single argument now hides axis ticks and legends without touching the theme. Alongside that, compose() gains a theme: parameter, defer() replaces plot(..., defer: true) , geom-area() stacks by default, and annotate() can let marks overflow the panel.…</p>
+        <div class="byline">Opinion · mickael.canouil.fr</div><p class="ex">Another week, another Gribouille release. Gribouille 0.3.0 is narrower in scope than 0.2 , but it brings some wanted controls. The headline is guide control: a single argument now hides axis ticks and legends without touching the theme. Alongside that, compose() gains a theme: parameter, defer() replaces plot(..., defer: true) , geom-area() stacks by default, and annotate() can let marks overflow the panel.…</p>
         <span class="more">Read full story ↗</span>
       </div>
     </article>
@@ -230,8 +249,7 @@ each of these JR…</p>
       <div class="meat">
         <div class="kicker"><span class="num">06</span> blog.jxmo.io <span class="badge op">Column</span><span class="score">▲ 29</span></div>
         <h2 class="hl">Zen and the Art of Machine Learning Research</h2>
-        <div class="byline">Opinion · blog.jxmo.io</div>
-        <p class="ex">So you want to do AI research? It’s true that no one really teaches you how. Not directly, anyway. But it turns out that the way to get started is pretty simple: some combination of (i) reading and (ii) building stuff.  You can’t do one without the other. You become a researcher through the combination. It turns out the process of becoming a great researcher is not unlike learning to meditate: The way to get started…</p>
+        <div class="byline">Opinion · blog.jxmo.io</div><p class="ex">So you want to do AI research? It’s true that no one really teaches you how. Not directly, anyway. But it turns out that the way to get started is pretty simple: some combination of (i) reading and (ii) building stuff.  You can’t do one without the other. You become a researcher through the combination. It turns out the process of becoming a great researcher is not unlike learning to meditate: The way to get started…</p>
         <span class="more">Read full story ↗</span>
       </div>
     </article>
@@ -241,8 +259,7 @@ each of these JR…</p>
       <div class="meat">
         <div class="kicker"><span class="num">01</span> mnot.net <span class="badge op">Column</span><span class="score">▲ 28</span></div>
         <h2 class="hl">So You Want to Define a Well-Known URI</h2>
-        <div class="byline">Opinion · mnot.net</div>
-        <p class="ex">recent entries all entries feed Hi, I’m Mark Nottingham.
+        <div class="byline">Opinion · mnot.net</div><p class="ex">recent entries all entries feed Hi, I’m Mark Nottingham.
 I write about the Web, protocol design, HTTP, Internet governance, and more. This is a personal
 blog, it does not represent anyone else. Find out more . Comments? Let&#x27;s talk on Mastodon. @mnot@techpolicy.social The Nature of Internet Standards (series) No One Should Have That Much Power Monday, 29 April 2024 RFC 9518 - What Can Internet Standards Do About…</p>
         <span class="more">Read full story ↗</span>
@@ -254,8 +271,7 @@ blog, it does not represent anyone else. Find out more . Comments? Let&#x27;s ta
       <div class="meat">
         <div class="kicker"><span class="num">13</span> whatwelo.st <span class="badge op">Column</span><span class="score">▲ 25</span></div>
         <h2 class="hl">Generative AI Is Having Its Herbalife Moment</h2>
-        <div class="byline">Opinion · whatwelo.st</div>
-        <p class="ex">Over the past few weeks, I’ve noticed that TikTok has been serving me ads for Replit — one of the many vibe-coding startups that have emerged in the past couple of years, and that serve as a glorified wrapper for models from Anthropic, OpenAI, and Google. Now, TikTok can be a weird place at times. It’s full of companies trying to sell things to an audience that can not — and will not — ever buy them. Things like…</p>
+        <div class="byline">Opinion · whatwelo.st</div><p class="ex">Over the past few weeks, I’ve noticed that TikTok has been serving me ads for Replit — one of the many vibe-coding startups that have emerged in the past couple of years, and that serve as a glorified wrapper for models from Anthropic, OpenAI, and Google. Now, TikTok can be a weird place at times. It’s full of companies trying to sell things to an audience that can not — and will not — ever buy them. Things like…</p>
         <span class="more">Read full story ↗</span>
       </div>
     </article>
@@ -265,8 +281,7 @@ blog, it does not represent anyone else. Find out more . Comments? Let&#x27;s ta
       <div class="meat">
         <div class="kicker"><span class="num">04</span> jvm-weekly.com <span class="badge op">Column</span><span class="score">▲ 15</span></div>
         <h2 class="hl">Project Valhalla, Explained: How a Decade of Work Arrives in JDK 28</h2>
-        <div class="byline">Opinion · jvm-weekly.com</div>
-        <p class="ex">On June 15, Oracle engineer Lois Foltan confirmed what a good chunk of the industry had stopped believing: JEP 401: Value Classes and Objects will be integrated into the main OpenJDK repository and is targeting JDK 28. Thanks for reading JVM Weekly! Subscribe for free to receive new posts and support my work. The change is so large that the remaining committers were asked to hold off on bigger commits during the…</p>
+        <div class="byline">Opinion · jvm-weekly.com</div><p class="ex">On June 15, Oracle engineer Lois Foltan confirmed what a good chunk of the industry had stopped believing: JEP 401: Value Classes and Objects will be integrated into the main OpenJDK repository and is targeting JDK 28. Thanks for reading JVM Weekly! Subscribe for free to receive new posts and support my work. The change is so large that the remaining committers were asked to hold off on bigger commits during the…</p>
         <span class="more">Read full story ↗</span>
       </div>
     </article></div></section><section class="zone show"><div class="sechead"><h3>Show & Tell</h3><span class="secdesc">“Show HN” — things people built and shipped</span><span class="seccount">1 item</span></div><div class="grid">
@@ -276,7 +291,6 @@ blog, it does not represent anyone else. Find out more . Comments? Let&#x27;s ta
       <div class="meat">
         <div class="kicker"><span class="num">16</span> github.com <span class="badge show">Show HN</span><span class="score">▲ 47</span></div>
         <h2 class="hl">Show HN: Talos – Open-source WASM interpreter for Lean</h2>
-        
         <p class="ex">Talos is a WebAssembly interpreter written in Lean 4, named after the bronze giant of Greek mythology who guarded Crete — a mechanical guardian, built to enforce rules. The same definitions that execute a Wasm program are the ones you reason about . There is no separate spec interpreter to keep in sync: evaluation and proof share a single codebase. Work in progress. Talos is under active development. APIs and proof…</p>
         <span class="more">Read full story ↗</span>
       </div>
@@ -284,5 +298,6 @@ blog, it does not represent anyone else. Find out more . Comments? Let&#x27;s ta
        <span class="jt">Flexport (YC W14) Is Hiring in Indonesia, India, and Thailand</span><span class="jd">flexport.com · ▲1</span></a></div></section>
   <div class="foot">THE HACKER TIMES — auto-generated from the Hacker News API · Friday, June 19, 2026 ·
   News 9 · Opinion 9 · Show HN 1 · Hiring 1 · 17/20 illustrated</div>
+  <div class="enginenote">Layout: CSS Grid Level 3 “grid-lanes” masonry where supported (Safari/iOS), with multicolumn fallback elsewhere.</div>
 </div>
 </body></html>
