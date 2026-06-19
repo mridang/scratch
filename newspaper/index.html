@@ -1,20 +1,39 @@
-<!DOCTYPE html><html lang="en"><head>
+<!DOCTYPE html><html lang="en" data-theme="ft"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" id="tc" content="#FFF1E5">
 <title>THE HACKER TIMES — Friday, June 19, 2026</title>
 <style>
-:root{--ink:#16130f;--paper:#f5f1e8;--card:#fffdf7;--accent:#9b1b1b;--rule:#d8cfba;--muted:#7c7361;--op:#2c4a7c;--show:#1d6b3a;--hire:#7a4d12;--lane:240px;--gap:18px;}
+:root{--lane:240px;--gap:18px;}
+/* ===== FT theme (default) ===== */
+:root,html[data-theme="ft"]{
+  --paper:#FFF1E5;--ink:#262A33;--accent:#990F3D;--rule:#e6d7c9;--muted:#66605c;
+  --op:#0F5499;--show:#0D7680;--hire:#9A6A00;
+  --mastbg:#FFF1E5;--masttext:#262A33;--mastrule:#262A33;--themecolor:#FFF1E5;
+  --serif:Georgia,'Times New Roman','Iowan Old Style',serif;--mastflag:none;
+}
+/* ===== Economist theme ===== */
+html[data-theme="economist"]{
+  --paper:#ffffff;--ink:#121212;--accent:#E3120B;--rule:#dcdcdc;--muted:#5c5c5c;
+  --op:#1F4E79;--show:#0D7680;--hire:#9A6A00;
+  --mastbg:#E3120B;--masttext:#ffffff;--mastrule:rgba(255,255,255,.6);--themecolor:#E3120B;
+  --serif:Georgia,'Times New Roman',serif;--mastflag:block;
+}
 *{box-sizing:border-box;min-width:0;}
 html,body{max-width:100%;overflow-x:hidden;}
-body{margin:0;background:var(--paper);color:var(--ink);font-family:'Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif;}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--serif);transition:background .2s,color .2s;}
 img{max-width:100%;}
 .hl,.ex,.kicker,.jt,.jd{overflow-wrap:anywhere;word-break:break-word;}
 .wrap{max-width:1320px;margin:0 auto;padding:0 18px 70px;}
-header.mast{text-align:center;padding:22px 0 10px;border-bottom:3px double var(--ink);margin-bottom:6px;background:none;}
-.mast .row{display:flex;flex-wrap:wrap;gap:4px 14px;justify-content:space-between;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);max-width:1320px;margin:0 auto;padding:0 18px;}
+header.mast{text-align:center;padding:18px 0 10px;border-bottom:3px double var(--mastrule);margin-bottom:6px;background:var(--mastbg);color:var(--masttext);transition:background .2s,color .2s;}
+.mast .row{display:flex;flex-wrap:wrap;gap:4px 14px;justify-content:space-between;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--masttext);opacity:.75;max-width:1320px;margin:0 auto;padding:0 18px;}
 @media(max-width:520px){.mast .row{justify-content:center;}.mast .row span:nth-child(2){display:none;}}
-.mast h1{font-family:Georgia,'Times New Roman',serif;font-weight:900;font-size:clamp(40px,8vw,92px);letter-spacing:-2px;margin:6px 0 2px;line-height:.95;}
-.mast .tag{font-style:italic;color:#3a342a;font-size:14px;margin:2px 0 10px;}
-.mast .date{display:flex;justify-content:center;gap:18px;flex-wrap:wrap;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);padding:5px 0;max-width:1320px;margin:8px auto 0;}
+.mast h1{font-family:var(--serif);font-weight:900;font-size:clamp(40px,8vw,92px);letter-spacing:-2px;margin:6px 0 2px;line-height:.95;color:var(--masttext);}
+.mast .tag{font-style:italic;font-size:14px;margin:2px 0 10px;opacity:.85;}
+.mast .date{display:flex;justify-content:center;gap:18px;flex-wrap:wrap;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;border-top:1px solid var(--mastrule);border-bottom:1px solid var(--mastrule);padding:5px 0;max-width:1320px;margin:8px auto 0;color:var(--masttext);}
+/* theme switcher */
+.switcher{display:flex;justify-content:center;gap:0;margin:12px auto 4px;border:1px solid var(--mastrule);border-radius:999px;width:max-content;overflow:hidden;}
+.switcher button{font-family:var(--serif);font-size:12px;letter-spacing:1px;text-transform:uppercase;padding:5px 16px;background:transparent;color:var(--masttext);border:none;cursor:pointer;transition:background .15s,color .15s;}
+.switcher button[aria-pressed="true"]{background:var(--masttext);color:var(--mastbg);font-weight:700;}
 .zone{margin-top:34px;}
 .sechead{display:flex;align-items:baseline;gap:14px;border-bottom:2px solid var(--ink);padding-bottom:6px;margin-bottom:18px;flex-wrap:wrap;}
 .sechead h3{font-family:Georgia,serif;font-weight:900;font-size:26px;margin:0;letter-spacing:.5px;text-transform:uppercase;}
@@ -88,6 +107,10 @@ header.mast{text-align:center;padding:22px 0 10px;border-bottom:3px double var(-
   <h1>The Hacker Times</h1>
   <div class="tag">“All the News That’s Fit to Upvote”</div>
   <div class="date"><span>Friday, June 19, 2026</span><span>San Francisco · The Cloud</span><span>Top 20 Stories</span></div>
+  <div class="switcher" role="group" aria-label="Theme">
+    <button data-theme="ft" aria-pressed="true">FT</button>
+    <button data-theme="economist" aria-pressed="false">Economist</button>
+  </div>
 </header>
 <div class="wrap">
 <section class="zone news"><div class="sechead"><h3>The Front Page</h3><span class="secdesc">News, research & announcements from institutions, companies and the press</span><span class="seccount">9 items</span></div><div class="grid">
@@ -300,4 +323,21 @@ blog, it does not represent anyone else. Find out more . Comments? Let&#x27;s ta
   News 9 · Opinion 9 · Show HN 1 · Hiring 1 · 17/20 illustrated</div>
   <div class="enginenote">Layout: CSS Grid Level 3 “grid-lanes” masonry where supported (Safari/iOS), with multicolumn fallback elsewhere.</div>
 </div>
+<script>
+(function(){
+  var html=document.documentElement, tc=document.getElementById('tc');
+  var btns=document.querySelectorAll('.switcher button');
+  function apply(t){
+    html.setAttribute('data-theme',t);
+    var c=getComputedStyle(html).getPropertyValue('--themecolor').trim();
+    if(c) tc.setAttribute('content',c);
+    btns.forEach(function(b){b.setAttribute('aria-pressed', b.dataset.theme===t ? 'true':'false');});
+    try{localStorage.setItem('htimes-theme',t);}catch(e){}
+  }
+  var saved='ft';
+  try{saved=localStorage.getItem('htimes-theme')||'ft';}catch(e){}
+  apply(saved);
+  btns.forEach(function(b){b.addEventListener('click',function(){apply(b.dataset.theme);});});
+})();
+</script>
 </body></html>
