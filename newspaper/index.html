@@ -1,6 +1,11 @@
 <!DOCTYPE html><html lang="en" data-theme="ft"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" id="tc" content="#FFF1E5">
+<meta name="theme-color" id="tc" content="#990F3D">
+<script>/* no-flash: apply saved theme + bar colour before first paint */
+(function(){try{var t=localStorage.getItem('htimes-theme')||'ft';
+var c={ft:'#990F3D',economist:'#E3120B'}[t]||'#990F3D';
+document.documentElement.setAttribute('data-theme',t);
+var m=document.getElementById('tc');if(m)m.setAttribute('content',c);}catch(e){}})();</script>
 <title>THE HACKER TIMES — Friday, June 19, 2026</title>
 <style>
 :root{--lane:240px;--gap:18px;}
@@ -8,7 +13,7 @@
 :root,html[data-theme="ft"]{
   --paper:#FFF1E5;--ink:#262A33;--accent:#990F3D;--rule:#e6d7c9;--muted:#66605c;
   --op:#0F5499;--show:#0D7680;--hire:#9A6A00;
-  --mastbg:#FFF1E5;--masttext:#262A33;--mastrule:#262A33;--themecolor:#FFF1E5;
+  --mastbg:#990F3D;--masttext:#FFF1E5;--mastrule:rgba(255,241,229,.55);--themecolor:#990F3D;
   --serif:Georgia,'Times New Roman','Iowan Old Style',serif;--mastflag:none;
 }
 /* ===== Economist theme ===== */
