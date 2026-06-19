@@ -21,3 +21,4 @@ Running notes of what was asked for, newest at the bottom.
 17. Add a favicon per article.
 18. Make it a PWA — manifest, icons, service worker (offline + installable).
 19. Generative, content-driven layout: weight(score,image,length) -> tier (lead/feature/standard/brief) -> lane span + copyfit char budget + line-clamp; weak tail collapses into an In Brief rail. Layout recomputes per run.
+20. Newspaper layout polish: 2 columns on mobile (shrink lanes); float images in lead/feature so body copy wraps around them (alternating sides); features become full-width bands on mobile so the wrap has room.
