@@ -591,25 +591,13 @@ blog, it does not represent anyone…</p>
 })();
 </script>
 <script>
+/* Service worker removed — it was caching dead host responses and breaking the page.
+   Actively unregister any previously-installed worker and purge its caches. */
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function(){
-    navigator.serviceWorker.register('sw.js').catch(function(e){ console.warn('SW registration failed', e); });
-  });
+  navigator.serviceWorker.getRegistrations().then(function(rs){ rs.forEach(function(r){ r.unregister(); }); });
 }
-// Install prompt: capture the event Chrome fires instead of auto-banner, surface a button.
-(function(){
-  var deferred=null, btn=document.getElementById('installBtn');
-  var standalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-  window.addEventListener('beforeinstallprompt', function(e){
-    e.preventDefault(); deferred=e; if(btn && !standalone) btn.hidden=false;
-  });
-  if(btn) btn.addEventListener('click', async function(){
-    if(!deferred) return;
-    deferred.prompt();
-    try { await deferred.userChoice; } catch(e){}
-    deferred=null; btn.hidden=true;
-  });
-  window.addEventListener('appinstalled', function(){ if(btn) btn.hidden=true; });
-})();
+if (window.caches && caches.keys) {
+  caches.keys().then(function(ks){ ks.forEach(function(k){ caches.delete(k); }); });
+}
 </script>
 </body></html>
