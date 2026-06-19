@@ -3,11 +3,15 @@
 <title>THE HACKER TIMES — Friday, June 19, 2026</title>
 <style>
 :root{--ink:#16130f;--paper:#f5f1e8;--card:#fffdf7;--accent:#9b1b1b;--rule:#d8cfba;--muted:#7c7361;--op:#2c4a7c;--show:#1d6b3a;--hire:#7a4d12;--lane:240px;--gap:18px;}
-*{box-sizing:border-box;}
+*{box-sizing:border-box;min-width:0;}
+html,body{max-width:100%;overflow-x:hidden;}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:'Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif;}
+img{max-width:100%;}
+.hl,.ex,.kicker,.jt,.jd{overflow-wrap:anywhere;word-break:break-word;}
 .wrap{max-width:1320px;margin:0 auto;padding:0 18px 70px;}
 header.mast{text-align:center;padding:22px 0 10px;border-bottom:3px double var(--ink);margin-bottom:6px;background:none;}
-.mast .row{display:flex;justify-content:space-between;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);max-width:1320px;margin:0 auto;padding:0 18px;}
+.mast .row{display:flex;flex-wrap:wrap;gap:4px 14px;justify-content:space-between;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);max-width:1320px;margin:0 auto;padding:0 18px;}
+@media(max-width:520px){.mast .row{justify-content:center;}.mast .row span:nth-child(2){display:none;}}
 .mast h1{font-family:Georgia,'Times New Roman',serif;font-weight:900;font-size:clamp(40px,8vw,92px);letter-spacing:-2px;margin:6px 0 2px;line-height:.95;}
 .mast .tag{font-style:italic;color:#3a342a;font-size:14px;margin:2px 0 10px;}
 .mast .date{display:flex;justify-content:center;gap:18px;flex-wrap:wrap;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);padding:5px 0;max-width:1320px;margin:8px auto 0;}
