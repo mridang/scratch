@@ -62,28 +62,39 @@ header.mast{text-align:center;padding:18px 0 10px;border-bottom:3px double var(-
    Universal fallback: multicolumn masonry. */
 .grid{columns:var(--lane);column-gap:var(--gap);}
 .card{break-inside:avoid;margin:0 0 var(--gap);}
-.card.feature{column-span:all;}
+.card.w-all,.card.t-lead{column-span:all;}
+
+/* span classes shared by every grid engine below */
+@media(max-width:560px){.card.w2,.card.w3,.card.w4{}}
 
 /* CSS Grid Level 3 — "grid lanes" (Safari Tech Preview / iOS): real masonry packing + lane spanning */
 @supports (display:grid-lanes){
   .grid{display:grid-lanes;columns:initial;grid-template-columns:repeat(auto-fill,minmax(var(--lane),1fr));gap:var(--gap);}
   .card{margin:0;}
-  .card.feature{column-span:initial;grid-column:span 2;}
-  @media(min-width:1080px){.card.feature{grid-column:span 3;}}
-  @media(min-width:1380px){.card.feature{grid-column:span 4;}}
+  .card.w-all,.card.t-lead{column-span:initial;}
+  .card.w2{grid-column:span 2;} .card.w3{grid-column:span 3;} .card.w4{grid-column:span 4;}
+  .card.w-all{grid-column:1/-1;}
+  @media(max-width:900px){.card.w3,.card.w4{grid-column:span 2;}}
+  @media(max-width:560px){.card.w2,.card.w3,.card.w4{grid-column:span 1;}}
 }
 /* Standard masonry syntax (Firefox flag / future browsers) */
 @supports (grid-template-rows:masonry){
   .grid{display:grid;columns:initial;grid-template-columns:repeat(auto-fill,minmax(var(--lane),1fr));grid-template-rows:masonry;gap:var(--gap);}
   .card{margin:0;}
-  .card.feature{column-span:initial;grid-column:span 2;}
-  @media(min-width:1080px){.card.feature{grid-column:span 3;}}
+  .card.w-all,.card.t-lead{column-span:initial;}
+  .card.w2{grid-column:span 2;} .card.w3{grid-column:span 3;} .card.w4{grid-column:span 4;}
+  .card.w-all{grid-column:1/-1;}
+  @media(max-width:900px){.card.w3,.card.w4{grid-column:span 2;}}
+  @media(max-width:560px){.card.w2,.card.w3,.card.w4{grid-column:span 1;}}
 }
 @supports (display:masonry){
   .grid{display:masonry;columns:initial;grid-template-columns:repeat(auto-fill,minmax(var(--lane),1fr));gap:var(--gap);}
   .card{margin:0;}
-  .card.feature{column-span:initial;grid-column:span 2;}
-  @media(min-width:1080px){.card.feature{grid-column:span 3;}}
+  .card.w-all,.card.t-lead{column-span:initial;}
+  .card.w2{grid-column:span 2;} .card.w3{grid-column:span 3;} .card.w4{grid-column:span 4;}
+  .card.w-all{grid-column:1/-1;}
+  @media(max-width:900px){.card.w3,.card.w4{grid-column:span 2;}}
+  @media(max-width:560px){.card.w2,.card.w3,.card.w4{grid-column:span 1;}}
 }
 
 /* ===== FLAT STORY STYLE (no boxes) ===== */
@@ -106,12 +117,29 @@ header.mast{text-align:center;padding:18px 0 10px;border-bottom:3px double var(-
 .sec-opinion .ex{font-style:italic;}
 .more{font-size:11px;font-weight:700;letter-spacing:.5px;color:var(--accent);text-transform:uppercase;}
 
-/* Feature: image above big headline, flat */
-.card.feature{display:block;border-top:3px solid var(--ink);padding-top:16px;}
-.card.feature .thumb{margin-bottom:14px;}
-.card.feature .hl{font-size:clamp(26px,3.2vw,42px);line-height:1.04;}
-.card.feature .ex{font-size:15px;column-count:2;column-gap:26px;}
-@media(max-width:640px){.card.feature .ex{column-count:1;}}
+/* ===== TIER STYLES — prominence assigned by weight(), space-then-text ===== */
+.card.t-lead{border-top:3px solid var(--ink);padding-top:16px;}
+.card.t-lead .thumb{margin-bottom:14px;}
+.card.t-lead .hl{font-size:clamp(26px,3.2vw,42px);line-height:1.04;}
+.card.t-lead .ex{font-size:15px;column-count:2;column-gap:26px;}
+@media(max-width:640px){.card.t-lead .ex{column-count:1;}}
+.card.t-feature{border-top:2px solid var(--ink);}
+.card.t-feature .hl{font-size:clamp(20px,2vw,27px);line-height:1.1;}
+.card.t-feature .ex{font-size:14px;}
+.card.t-standard .hl{font-size:19px;}
+/* Copyfit guarantee: clamp non-lead excerpts so text can never overflow its cell */
+.card.t-feature .ex,.card.t-standard .ex{display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;}
+.card.t-feature .ex{-webkit-line-clamp:7;}
+.card.t-standard .ex{-webkit-line-clamp:6;}
+.card.t-standard .hl{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;overflow:hidden;}
+
+/* In Brief rail — the low-weight tail, as a real newspaper NIB column */
+.card.brief-block{border-top:3px double var(--ink);padding-top:12px;}
+.brief-h{font-family:Georgia,serif;font-weight:900;text-transform:uppercase;letter-spacing:1px;font-size:14px;margin:0 0 6px;}
+.brief-item{position:relative;z-index:4;display:flex;justify-content:space-between;gap:14px;align-items:baseline;padding:7px 0;border-top:1px solid var(--rule);text-decoration:none;color:var(--ink);}
+.brief-item:hover .bt{color:var(--accent);}
+.bt{font-weight:700;font-size:14px;line-height:1.2;}
+.bs{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;flex:0 0 auto;}
 
 .classifieds{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:0;}
 .job{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-top:1px solid var(--rule);text-decoration:none;color:var(--ink);}
@@ -133,178 +161,154 @@ header.mast{text-align:center;padding:18px 0 10px;border-bottom:3px double var(-
 </header>
 <div class="wrap">
 <section class="zone news"><div class="sechead"><h3>The Front Page</h3><span class="secdesc">News, research & announcements from institutions, companies and the press</span><span class="seccount">13 items</span></div><div class="grid">
-    <article class="card sec-news feature noimg">
-      <a class="hit" href="https://www.midjourney.com/medical/blogpost" target="_blank" rel="noopener"></a>
-      
-      <div class="meat">
-        <div class="kicker"><span class="num">40</span><img class="fav" loading="lazy" src="favicons/40.png" alt=""> Midjourney <span class="score">▲ 1304</span></div>
-        <h2 class="hl">Midjourney Medical</h2>
-        <p class="ex">Full text unavailable (page blocked / paywalled). Follow the link to read at the source.</p>
-        <span class="more">Read full story ↗</span>
-      </div>
-    </article>
-    <article class="card sec-news">
+    <article class="card sec-news t-lead w3">
       <a class="hit" href="https://www.thatprivacyguy.com/blog/elkjop-forced-consent-fine/" target="_blank" rel="noopener"></a>
       <div class="thumb"><img loading="lazy" src="img/21.png" alt=""></div>
       <div class="meat">
         <div class="kicker"><span class="num">21</span><img class="fav" loading="lazy" src="favicons/21.png" alt=""> That Privacy Guy <span class="score">▲ 374</span></div>
         <h2 class="hl">I told them forced consent was unlawful. 5 years later it cost Elkjop €1.8M</h2>
-        <p class="ex">The iconic Harry Potter Philosopher&#x27;s Stone scene of Hogwarts acceptance letters bursting in through every opening of a small English suburban house, hundreds of envelopes flying out of the fireplace, streaming through the letterbox in the wooden front door, and pouring through the chimney, envelopes swirling chaotically through the living room mid-air, motion blur on the flying letters, warm interior daylight, wide…</p>
+        <p class="ex">The iconic Harry Potter Philosopher&#x27;s Stone scene of Hogwarts acceptance letters bursting in through every opening of a small English suburban house, hundreds of envelopes flying out of the fireplace, streaming through the letterbox in the wooden front door, and pouring through the chimney, envelopes swirling chaotically through the living room mid-air, motion blur on the flying letters, warm interior daylight, wide angle film still (c) Hanff &amp; Co. AB - CC BY-NC-SA 4.0
+           · https://www.thatprivacyguy.com/ Reach privacy, DP, security and AI leaders Over 1 million reads in the first month — CPOs, DPOs,…</p>
         <span class="more">Read full story ↗</span>
       </div>
     </article>
-    <article class="card sec-news noimg">
+    <article class="card sec-news t-standard w1 noimg">
       <a class="hit" href="https://www.cs.cornell.edu/courses/cs6120/2025fa/self-guided/" target="_blank" rel="noopener"></a>
       
       <div class="meat">
         <div class="kicker"><span class="num">16</span><img class="fav" loading="lazy" src="favicons/16.png" alt=""> Cornell University <span class="score">▲ 364</span></div>
         <h2 class="hl">CS 6120: Advanced Compilers: The Self-Guided Online Course (2020)</h2>
         <p class="ex">CS 6120 is a PhD-level Cornell CS course by Adrian Sampson on programming language implementation.
-It covers universal compilers topics like intermediate representations, data flow, and “classic” optimizations as well as more research-flavored topics such as parallelization, just-in-time compilation, and garbage collection.
-The work consists of reading papers and open-source hacking tasks, which use LLVM and an…</p>
+It covers universal compilers topics like intermediate representations, data flow, and…</p>
         <span class="more">Read full story ↗</span>
       </div>
     </article>
-    <article class="card sec-news">
+    <article class="card sec-news t-feature w2">
       <a class="hit" href="https://blog.ui.com/article/introducing-enterprise-nas" target="_blank" rel="noopener"></a>
       <div class="thumb"><img loading="lazy" src="img/14.jpg" alt=""></div>
       <div class="meat">
         <div class="kicker"><span class="num">14</span><img class="fav" loading="lazy" src="favicons/14.png" alt=""> Ubiquiti <span class="score">▲ 331</span></div>
         <h2 class="hl">Ubiquiti: Enterprise NAS, Built on ZFS</h2>
-        <p class="ex">Enterprise storage has traditionally required costly licensing, proprietary hardware, and complex management. ENAS changes that by delivering a private, local storage platform designed for performance, scalability, and simplicity, all without the overhead typically associated with enterprise infrastructure. The all-new ENAS combines powerful hardware with modern storage technologies to provide the performance and…</p>
+        <p class="ex">Enterprise storage has traditionally required costly licensing, proprietary hardware, and complex management. ENAS changes that by delivering a private, local storage platform designed for performance, scalability, and simplicity, all without the overhead typically associated with enterprise infrastructure. The all-new ENAS combines…</p>
         <span class="more">Read full story ↗</span>
       </div>
     </article>
-    <article class="card sec-news">
+    <article class="card sec-news t-feature w2">
       <a class="hit" href="https://blog.elenarossini.com/w-social-public-institutions-and-the-theater-of-european-digital-sovereignty/" target="_blank" rel="noopener"></a>
       <div class="thumb"><img loading="lazy" src="img/28.jpg" alt=""></div>
       <div class="meat">
         <div class="kicker"><span class="num">28</span><img class="fav" loading="lazy" src="favicons/28.png" alt=""> Elena Rossini <span class="score">▲ 207</span></div>
         <h2 class="hl">W Social, public institutions and the theater of European digital sovereignty</h2>
-        <p class="ex">In the past few months I have unwittingly become an expert on all things W Social : the microblogging platform that is a fork of Bluesky and bills itself as Europe’s alternative to X, with identity verification “to fight bots and misinformation” and data hosted in Europe “to promote European digital sovereignty”. Why am I fascinated by this topic? I find the discrepancies between their public image and the reality…</p>
+        <p class="ex">In the past few months I have unwittingly become an expert on all things W Social : the microblogging platform that is a fork of Bluesky and bills itself as Europe’s alternative to X, with identity verification “to fight bots and misinformation” and data hosted in Europe “to promote European digital sovereignty”. Why am I fascinated by…</p>
         <span class="more">Read full story ↗</span>
       </div>
     </article>
-    <article class="card sec-news">
+    <article class="card sec-news t-standard w1">
       <a class="hit" href="https://blog.modelcontextprotocol.io/posts/enterprise-managed-auth/" target="_blank" rel="noopener"></a>
       <div class="thumb"><img loading="lazy" src="img/08.png" alt=""></div>
       <div class="meat">
         <div class="kicker"><span class="num">08</span><img class="fav" loading="lazy" src="favicons/08.png" alt=""> Model Context Protocol <span class="score">▲ 190</span></div>
         <h2 class="hl">Zero-Touch OAuth for MCP</h2>
         <p class="ex">Per-user auth is high friction Authorize once, inherit everywhere The Enterprise-Managed Authorization extension is now stable. Organizations can centrally
-manage authorization for MCP servers and end-users can access all connected MCP servers
-through a single log in. The extension is being adopted by Anthropic, Microsoft, Okta and
-a growing number of MCP servers. The Enterprise-Managed Authorization (EMA) extension…</p>
+manage authorization for MCP…</p>
         <span class="more">Read full story ↗</span>
       </div>
     </article>
-    <article class="card sec-news">
+    <article class="card sec-news t-standard w1">
       <a class="hit" href="https://news.mit.edu/2026/to-study-how-chips-really-work-mit-researchers-built-their-own-operating-system-0610" target="_blank" rel="noopener"></a>
       <div class="thumb"><img loading="lazy" src="img/04.jpg" alt=""></div>
       <div class="meat">
         <div class="kicker"><span class="num">04</span><img class="fav" loading="lazy" src="favicons/04.png" alt=""> MIT News <span class="score">▲ 173</span></div>
         <h2 class="hl">To study how chips work, MIT researchers built their own operating system</h2>
-        <p class="ex">A new kernel, or core program within an operating system, gives researchers a cleaner view of what’s happening inside a processor. Called Fractal and developed at MIT, the kernel has already surfaced previously unknown behavior in Apple’s M1. When security researchers want to understand what a modern processor is really doing with the kind of detail that determines whether attacks like Spectre and Meltdown are…</p>
+        <p class="ex">A new kernel, or core program within an operating system, gives researchers a cleaner view of what’s happening inside a processor. Called Fractal and developed at MIT, the kernel has…</p>
         <span class="more">Read full story ↗</span>
       </div>
     </article>
-    <article class="card sec-news">
+    <article class="card sec-news t-standard w1">
       <a class="hit" href="https://www.greybeam.ai/blog/duckdb-internals-part-1" target="_blank" rel="noopener"></a>
       <div class="thumb"><img loading="lazy" src="img/02.png" alt=""></div>
       <div class="meat">
         <div class="kicker"><span class="num">02</span><img class="fav" loading="lazy" src="favicons/02.png" alt=""> Greybeam <span class="score">▲ 150</span></div>
         <h2 class="hl">DuckDB Internals: Why Is DuckDB Fast? (Part 1)</h2>
-        <p class="ex">DuckDB has gone from a research project at CWI Amsterdam in 2019 to one of the most widely adopted databases of the past decade. The list of places it shows up is long: notebooks, ETL pipelines, dashboards, CI test runners, embedded analytics inside SaaS products, even an iPhone running TPC-H at scale factor 100 . Companies have started building real products around it. MotherDuck is wrapping DuckDB into a cloud…</p>
+        <p class="ex">DuckDB has gone from a research project at CWI Amsterdam in 2019 to one of the most widely adopted databases of the past decade. The list of places it shows up is long: notebooks, ETL…</p>
         <span class="more">Read full story ↗</span>
       </div>
     </article>
-    <article class="card sec-news noimg">
-      <a class="hit" href="https://www.jacc.org/doi/10.1016/j.jaccas.2025.104885" target="_blank" rel="noopener"></a>
-      
-      <div class="meat">
-        <div class="kicker"><span class="num">15</span><img class="fav" loading="lazy" src="favicons/15.png" alt=""> American College of Cardiology <span class="score">▲ 139</span></div>
-        <h2 class="hl">Ice water drowning survival of young patient (2025)</h2>
-        <p class="ex">Full text unavailable (page blocked / paywalled). Follow the link to read at the source.</p>
-        <span class="more">Read full story ↗</span>
-      </div>
-    </article>
-    <article class="card sec-news">
+    <article class="card sec-news t-standard w1">
       <a class="hit" href="https://letsencrypt.status.io/#2026" target="_blank" rel="noopener"></a>
       <div class="thumb"><img loading="lazy" src="img/25.png" alt=""></div>
       <div class="meat">
         <div class="kicker"><span class="num">25</span><img class="fav" loading="lazy" src="favicons/25.png" alt=""> Let&#x27;s Encrypt <span class="score">▲ 139</span></div>
         <h2 class="hl">Many Let&#x27;s Encrypt renewals had errors today</h2>
-        <p class="ex">Updated a few seconds ago acme-v02.api.letsencrypt.org (Production), portal.letsencrypt.org (Production) High Assurance Datacenter 1, High Assurance Datacenter 2 acme-v02.api.letsencrypt.org (Production) acme-staging-v02.api.letsencrypt.org (Staging) portal.letsencrypt.org (Production) portal-staging.letsencrypt.org (Staging) *.c.lencr.org (Production) stg-*.c.lencr.org (Staging) log.twig.ct.letsencrypt.org…</p>
+        <p class="ex">Updated a few seconds ago acme-v02.api.letsencrypt.org (Production), portal.letsencrypt.org (Production) High Assurance Datacenter 1, High Assurance Datacenter 2…</p>
         <span class="more">Read full story ↗</span>
       </div>
     </article>
-    <article class="card sec-news">
+    <article class="card sec-news t-standard w1">
       <a class="hit" href="https://americanexpress.io/cell-based-architecture-for-resilient-payment-systems/" target="_blank" rel="noopener"></a>
       <div class="thumb"><img loading="lazy" src="img/18.jpg" alt=""></div>
       <div class="meat">
         <div class="kicker"><span class="num">18</span><img class="fav" loading="lazy" src="favicons/18.png" alt=""> American Express <span class="score">▲ 122</span></div>
         <h2 class="hl">Cell-based architecture for resilient payment systems</h2>
         <p class="ex">Architecture Payments Resiliency The American Express core payments ecosystem is a global platform relied on by Card Members and partners around the
-              world. Every day, it processes live payment transactions that require high availability, low latency, and
-              predictable performance. Resiliency is not an afterthought; it has been encoded into the system’s design from the beginning. Localized…</p>
+              world. Every day, it…</p>
         <span class="more">Read full story ↗</span>
       </div>
     </article>
-    <article class="card sec-news">
+    <article class="card sec-news t-standard w1">
       <a class="hit" href="https://www.dpolakovic.space/blogs/zork-part2#update" target="_blank" rel="noopener"></a>
       <div class="thumb"><img loading="lazy" src="img/31.jpg" alt=""></div>
       <div class="meat">
         <div class="kicker"><span class="num">31</span><img class="fav" loading="lazy" src="favicons/31.png" alt=""> Daniel Polakovic <span class="score">▲ 79</span></div>
         <h2 class="hl">Zork name origin got an update on Wikipedia</h2>
         <p class="ex">It&#x27;s been two years since my last Zork adventure and I finally got time to finish it. But before I restored my last save, I checked
-        my blog notes and there was one &quot;opened issue&quot; which I wanted 
-        to address. I glossed over problematic trivia about Zork which says, that &quot;zork&quot; 
-        was a jargon word for unfinished program in MIT Dynamic Modeling Group back in 70&#x27;s. I also pointed out, that 
-       …</p>
+        my blog notes and there was one &quot;opened issue&quot;…</p>
         <span class="more">Read full story ↗</span>
       </div>
     </article>
-    <article class="card sec-news">
+    <article class="card sec-news t-standard w1">
       <a class="hit" href="https://www.darpa.mil/research/challenges/lift" target="_blank" rel="noopener"></a>
       <div class="thumb"><img loading="lazy" src="img/32.jpg" alt=""></div>
       <div class="meat">
         <div class="kicker"><span class="num">32</span><img class="fav" loading="lazy" src="favicons/32.png" alt=""> DARPA <span class="score">▲ 20</span></div>
         <h2 class="hl">DARPA Heavy Life Challenge</h2>
-        <p class="ex">What better place to showcase aviation history in the making than at the world&#x27;s largest military aviation museum! | 0:30 DARPA Challenges incentivize researchers from across academia, government, commercial, and defense communities to develop non-traditional or unexpected solutions to grand national security challenges, through cash prizes. Prizes encourage thinking outside the box and broad participation by…</p>
+        <p class="ex">What better place to showcase aviation history in the making than at the world&#x27;s largest military aviation museum! | 0:30 DARPA Challenges incentivize researchers from across academia,…</p>
         <span class="more">Read full story ↗</span>
       </div>
-    </article></div></section><section class="zone opinion"><div class="sechead"><h3>Opinion & Columns</h3><span class="secdesc">Independent voices — analysis and commentary from the blogosphere</span><span class="seccount">33 items</span></div><div class="grid">
-    <article class="card sec-opinion feature noimg">
+    </article><article class="card w-all brief-block"><div class="meat"><div class="brief-h">In Brief</div><a class="brief-item" href="https://www.midjourney.com/medical/blogpost" target="_blank" rel="noopener">
+       <span class="bt">Midjourney Medical</span><span class="bs">▲1304 · Midjourney</span></a><a class="brief-item" href="https://www.jacc.org/doi/10.1016/j.jaccas.2025.104885" target="_blank" rel="noopener">
+       <span class="bt">Ice water drowning survival of young patient (2025)</span><span class="bs">▲139 · American College of Cardiology</span></a></div></article></div></section><section class="zone opinion"><div class="sechead"><h3>Opinion & Columns</h3><span class="secdesc">Independent voices — analysis and commentary from the blogosphere</span><span class="seccount">33 items</span></div><div class="grid">
+    <article class="card sec-opinion t-feature w2 noimg">
       <a class="hit" href="https://orchidfiles.com/github-repositories-distributing-malware/" target="_blank" rel="noopener"></a>
       
       <div class="meat">
         <div class="kicker"><span class="num">07</span><img class="fav" loading="lazy" src="favicons/07.png" alt=""> Orchid Files <span class="badge op">Column</span><span class="score">▲ 780</span></div>
         <h2 class="hl">I found 10k GitHub repositories distributing Trojan malware</h2>
-        <div class="byline">Opinion · Orchid Files</div><p class="ex">This is the story of how I found 10,000 repositories on GitHub that distribute Trojan malware. They are all from different contributors, have different names, and are not forks of other repositories. But they share a common pattern, which is what allowed me to write a script to find such repositories. I have a project on GitHub, and I wanted to check whether search engines had indexed it. I typed the project name into Google, and my repository appeared in the results. I entered the same query into Bing, and someone else’s repository appeared in the results, with the exact same name and description. It was a copy of my repository…</p>
+        <div class="byline">Opinion · Orchid Files</div><p class="ex">This is the story of how I found 10,000 repositories on GitHub that distribute Trojan malware. They are all from different contributors, have different names, and are not forks of other repositories. But they share a common pattern, which is what allowed me to write a script to find such repositories. I have a project on GitHub, and I…</p>
         <span class="more">Read full story ↗</span>
       </div>
     </article>
-    <article class="card sec-opinion">
+    <article class="card sec-opinion t-lead w3">
       <a class="hit" href="https://www.bluewin.ch/en/news/switzerland/parliament-lifts-ban-on-new-nuclear-power-plants-3257535.html" target="_blank" rel="noopener"></a>
       <div class="thumb"><img loading="lazy" src="img/42.jpg" alt=""></div>
       <div class="meat">
         <div class="kicker"><span class="num">42</span><img class="fav" loading="lazy" src="favicons/42.png" alt=""> Blue News <span class="badge op">Column</span><span class="score">▲ 753</span></div>
         <h2 class="hl">Swiss parliament lifts ban on new nuclear power plants</h2>
-        <div class="byline">Opinion · Blue News</div><p class="ex">Swisscom blue News &amp; E-Mail Until June 19, the Federal Palace in Bern will once again be bustling with activity. Numerous important issues will be on the agenda during the summer session of the National Council and Council of States. From June 1 to 19, 2026, the Federal Parliament’s summer session will take place at the Federal Palace. Topics up for debate include the 13th AHV pension, the armed forces, and federal…</p>
+        <div class="byline">Opinion · Blue News</div><p class="ex">Swisscom blue News &amp; E-Mail Until June 19, the Federal Palace in Bern will once again be bustling with activity. Numerous important issues will be on the agenda during the summer session of the National Council and Council of States. From June 1 to 19, 2026, the Federal Parliament’s summer session will take place at the Federal Palace. Topics up for debate include the 13th AHV pension, the armed forces, and federal finances. blue News is providing updates from the Federal Palace here in this live feed. Thursday, June 18, 10:47 a.m. Parliament Lifts Ban on New Nuclear Power Plants After Marathon Debate The…</p>
         <span class="more">Read full story ↗</span>
       </div>
     </article>
-    <article class="card sec-opinion">
+    <article class="card sec-opinion t-feature w2">
       <a class="hit" href="https://www.windowslatest.com/2026/06/15/microsofts-new-outlook-takes-10-seconds-to-do-what-outlook-classic-does-instantly-on-windows/" target="_blank" rel="noopener"></a>
       <div class="thumb"><img loading="lazy" src="img/45.jpg" alt=""></div>
       <div class="meat">
         <div class="kicker"><span class="num">45</span><img class="fav" loading="lazy" src="favicons/45.png" alt=""> Windows Latest <span class="badge op">Column</span><span class="score">▲ 662</span></div>
         <h2 class="hl">Microsoft new Outlook takes 10 seconds to do what Outlook Classic does instantly</h2>
-        <div class="byline">Opinion · Windows Latest</div><p class="ex">Microsoft’s Outlook for Windows has a notification problem that is hard to ignore. Clicking a Windows 11 notification for a new email is supposed to take you straight to that message. Instead, the new Outlook makes you wait, and the numbers are embarrassing. Windows 11 ships with two versions of Outlook. There is Outlook Classic , the long-running Win32 desktop app built for power users, and there is the new Outlook…</p>
+        <div class="byline">Opinion · Windows Latest</div><p class="ex">Microsoft’s Outlook for Windows has a notification problem that is hard to ignore. Clicking a Windows 11 notification for a new email is supposed to take you straight to that message. Instead, the new Outlook makes you wait, and the numbers are embarrassing. Windows 11 ships with two versions of Outlook. There is Outlook Classic , the…</p>
         <span class="more">Read full story ↗</span>
       </div>
     </article>
-    <article class="card sec-opinion">
+    <article class="card sec-opinion t-feature w2">
       <a class="hit" href="https://www.rahuljuliato.com/posts/emacs-31-around-the-corner" target="_blank" rel="noopener"></a>
       <div class="thumb"><img loading="lazy" src="img/43.png" alt=""></div>
       <div class="meat">
@@ -313,91 +317,71 @@ a growing number of MCP servers. The Enterprise-Managed Authorization (EMA) exte
         <div class="byline">Opinion · Rahul Juliato</div><p class="ex">Karthik Chikmagalur recently published another of his excellent &quot;Even More Batteries Included with Emacs&quot; posts, digging into lesser-known features that already ship with Emacs
 today. I wanted to write its mirror image. His post covers the
 batteries already in the box. Mine covers the ones arriving in Emacs
-31. Emacs 31 isn&#x27;t out yet, but I&#x27;ve been building it from both emacs-31 branch and master and daily driving…</p>
+31. Emacs 31 isn&#x27;t out yet,…</p>
         <span class="more">Read full story ↗</span>
       </div>
     </article>
-    <article class="card sec-opinion">
+    <article class="card sec-opinion t-feature w2">
       <a class="hit" href="https://www.submission.directory/" target="_blank" rel="noopener"></a>
       <div class="thumb"><img loading="lazy" src="img/49.png" alt=""></div>
       <div class="meat">
         <div class="kicker"><span class="num">49</span><img class="fav" loading="lazy" src="favicons/49.png" alt=""> Submission Directory <span class="badge op">Column</span><span class="score">▲ 411</span></div>
         <h2 class="hl">A website that lists websites to submit your website to</h2>
-        <div class="byline">Opinion · Submission Directory</div><p class="ex">A hand-picked directory of website submission sites. Find the best places to submit your website, startup, or product, earn quality backlinks, and rank higher across search engines and AI answers. High-authority publishing platform. Links are nofollow, but reach and reposting potential are large. The canonical company profile. Investors, journalists, and aggregators pull from it, so a complete profile pays off well…</p>
+        <div class="byline">Opinion · Submission Directory</div><p class="ex">A hand-picked directory of website submission sites. Find the best places to submit your website, startup, or product, earn quality backlinks, and rank higher across search engines and AI answers. High-authority publishing platform. Links are nofollow, but reach and reposting potential are large. The canonical company profile. Investors,…</p>
         <span class="more">Read full story ↗</span>
       </div>
     </article>
-    <article class="card sec-opinion">
+    <article class="card sec-opinion t-feature w2">
       <a class="hit" href="https://nelson.cloud/.gitignore-isnt-the-only-way-to-ignore-files-in-git/" target="_blank" rel="noopener"></a>
       <div class="thumb"><img loading="lazy" src="img/19.png" alt=""></div>
       <div class="meat">
         <div class="kicker"><span class="num">19</span><img class="fav" loading="lazy" src="favicons/19.png" alt=""> Nelson Figueroa <span class="badge op">Column</span><span class="score">▲ 410</span></div>
         <h2 class="hl">.gitignore Isn&#x27;t the only way to ignore files in Git</h2>
-        <div class="byline">Opinion · Nelson Figueroa</div><p class="ex">I’ve been using Git for so long and I just realized you can ignore files at three different levels and not just with .gitignore . The three files you can use to ignore files are: .gitignore is the usual file where you write files you want to ignore. It’s checked into Git along with the rest of the code. Whatever files you add to it will not get taken into account when running git commands. The exclude file lives in…</p>
+        <div class="byline">Opinion · Nelson Figueroa</div><p class="ex">I’ve been using Git for so long and I just realized you can ignore files at three different levels and not just with .gitignore . The three files you can use to ignore files are: .gitignore is the usual file where you write files you want to ignore. It’s checked into Git along with the rest of the code. Whatever files you add to it will…</p>
         <span class="more">Read full story ↗</span>
       </div>
     </article>
-    <article class="card sec-opinion noimg">
-      <a class="hit" href="https://www.independent.co.uk/us/money/craigslist-multimillionaire-craig-newmark-b2980681.html" target="_blank" rel="noopener"></a>
-      
-      <div class="meat">
-        <div class="kicker"><span class="num">47</span><img class="fav" loading="lazy" src="favicons/47.png" alt=""> The Independent <span class="badge op">Column</span><span class="score">▲ 360</span></div>
-        <h2 class="hl">The founder of Craigslist has given away half a billion dollars</h2>
-        <div class="byline">Opinion · The Independent</div><p class="ex">Full text unavailable (page blocked / paywalled). Follow the link to read at the source.</p>
-        <span class="more">Read full story ↗</span>
-      </div>
-    </article>
-    <article class="card sec-opinion">
-      <a class="hit" href="https://twitter.com/NoamShazeer/status/2067400851438932297" target="_blank" rel="noopener"></a>
-      <div class="thumb"><img loading="lazy" src="img/36.jpg" alt=""></div>
-      <div class="meat">
-        <div class="kicker"><span class="num">36</span><img class="fav" loading="lazy" src="favicons/36.png" alt=""> X <span class="badge op">Column</span><span class="score">▲ 326</span></div>
-        <h2 class="hl">Noam Shazeer Joins OpenAI</h2>
-        <div class="byline">Opinion · X</div><p class="ex">Full text unavailable (page blocked / paywalled). Follow the link to read at the source.</p>
-        <span class="more">Read full story ↗</span>
-      </div>
-    </article>
-    <article class="card sec-opinion">
+    <article class="card sec-opinion t-standard w1">
       <a class="hit" href="https://www.kcl.ac.uk/news/hospitals-and-universities-repurposing-drugs-at-90-lower-cost" target="_blank" rel="noopener"></a>
       <div class="thumb"><img loading="lazy" src="img/20.png" alt=""></div>
       <div class="meat">
         <div class="kicker"><span class="num">20</span><img class="fav" loading="lazy" src="favicons/20.png" alt=""> King&#x27;s College London <span class="badge op">Column</span><span class="score">▲ 304</span></div>
         <h2 class="hl">Hospitals and universities repurposing drugs at lower cost</h2>
-        <div class="byline">Opinion · King&#x27;s College London</div><p class="ex">Universities and hospitals are repurposing existing drugs through late-stage trials with funded costs up to 90% lower than those taking place in the pharmaceutical industry. This “hidden” research system, which operates outside of the patent system, has huge potential to regularly provide society with affordable treatments. Examples of this have included using a cancer drug to treat a leading cause of blindness,…</p>
+        <div class="byline">Opinion · King&#x27;s College London</div><p class="ex">Universities and hospitals are repurposing existing drugs through late-stage trials with funded costs up to 90% lower than those taking place in the pharmaceutical industry. This “hidden”…</p>
         <span class="more">Read full story ↗</span>
       </div>
     </article>
-    <article class="card sec-opinion">
+    <article class="card sec-opinion t-standard w1">
       <a class="hit" href="https://spectrum.ieee.org/modos-e-paper-monitor" target="_blank" rel="noopener"></a>
       <div class="thumb"><img loading="lazy" src="img/30.jpg" alt=""></div>
       <div class="meat">
         <div class="kicker"><span class="num">30</span><img class="fav" loading="lazy" src="favicons/30.png" alt=""> IEEE Spectrum <span class="badge op">Column</span><span class="score">▲ 277</span></div>
         <h2 class="hl">Modos Color Monitor Pushes E-Paper Displays Further</h2>
-        <div class="byline">Opinion · IEEE Spectrum</div><p class="ex">After dev kit success, Modos’s cofounders offer an e-paper monitor Matthew S. Smith is a contributing editor for IEEE Spectrum and the former lead reviews editor at Digital Trends. Modos is crowdfunding to build an integrated e-paper monitor. Last fall, Modos debuted the Paper Monitor and Dev Kit , an open-source e-paper display kit that hit a record 75-hertz refresh rate. The project was successful, raising almost…</p>
+        <div class="byline">Opinion · IEEE Spectrum</div><p class="ex">After dev kit success, Modos’s cofounders offer an e-paper monitor Matthew S. Smith is a contributing editor for IEEE Spectrum and the former lead reviews editor at Digital Trends. Modos is…</p>
         <span class="more">Read full story ↗</span>
       </div>
     </article>
-    <article class="card sec-opinion">
+    <article class="card sec-opinion t-standard w1">
       <a class="hit" href="https://worksinprogress.co/issue/albertas-war-on-rats/" target="_blank" rel="noopener"></a>
       <div class="thumb"><img loading="lazy" src="img/33.jpg" alt=""></div>
       <div class="meat">
         <div class="kicker"><span class="num">33</span><img class="fav" loading="lazy" src="favicons/33.png" alt=""> Works in Progress <span class="badge op">Column</span><span class="score">▲ 171</span></div>
         <h2 class="hl">How Alberta Eradicated Rats</h2>
-        <div class="byline">Opinion · Works in Progress</div><p class="ex">Most of us accept rats as a fact of life. They live in tunnels and sewers, gnaw through walls, contaminate food, and resist nearly every attempt to push them back. A 2023 estimate put New York City’s rat population at about three million animals, roughly one rat for every three human residents. Almost nowhere do authorities try to get rid of rats altogether. The goal is usually to reduce sightings of them, limit the…</p>
+        <div class="byline">Opinion · Works in Progress</div><p class="ex">Most of us accept rats as a fact of life. They live in tunnels and sewers, gnaw through walls, contaminate food, and resist nearly every attempt to push them back. A 2023 estimate put New…</p>
         <span class="more">Read full story ↗</span>
       </div>
     </article>
-    <article class="card sec-opinion">
+    <article class="card sec-opinion t-standard w1">
       <a class="hit" href="https://xvw.lol/en/articles/emacs-start.html" target="_blank" rel="noopener"></a>
       <div class="thumb"><img loading="lazy" src="img/50.png" alt=""></div>
       <div class="meat">
         <div class="kicker"><span class="num">50</span><img class="fav" loading="lazy" src="favicons/50.png" alt=""> xvw <span class="badge op">Column</span><span class="score">▲ 143</span></div>
         <h2 class="hl">Emacs, how it all started for me</h2>
-        <div class="byline">Opinion · xvw</div><p class="ex">I have been using ( badly ) Emacs since around 2008. In this short article, I will try to present the chaotic path that led me to choose Emacs as my main text and code editor. This is absolutely not a tutorial , but rather a small piece of my personal lore, because it is quite amusing to describe clumsy choices that, in hindsight, turned out to be, in my view, beneficial. This article is largely inspired , while…</p>
+        <div class="byline">Opinion · xvw</div><p class="ex">I have been using ( badly ) Emacs since around 2008. In this short article, I will try to present the chaotic path that led me to choose Emacs as my main text and code editor. This is…</p>
         <span class="more">Read full story ↗</span>
       </div>
     </article>
-    <article class="card sec-opinion">
+    <article class="card sec-opinion t-standard w1">
       <a class="hit" href="https://rednafi.com/misc/chezmoi/" target="_blank" rel="noopener"></a>
       <div class="thumb"><img loading="lazy" src="img/44.png" alt=""></div>
       <div class="meat">
@@ -405,43 +389,31 @@ batteries already in the box. Mine covers the ones arriving in Emacs
         <h2 class="hl">Migrating from GNU Stow to Chezmoi</h2>
         <div class="byline">Opinion · Redowan Delowar</div><p class="ex">I’ve been managing my dotfiles with GNU stow for a few years. I even wrote a piece with a
 corny title about that setup back in 2023. Stow served me well, but managing symlinks
-across multiple devices slowly became a pain in the butt. So I started looking around for a better tool and even considered writing my own. Then a
-colleague pointed me to chezmoi , and so far I’m liking it a lot. It does everything I
-need, and…</p>
+across…</p>
         <span class="more">Read full story ↗</span>
       </div>
     </article>
-    <article class="card sec-opinion">
+    <article class="card sec-opinion t-standard w1">
       <a class="hit" href="https://tester.army" target="_blank" rel="noopener"></a>
       <div class="thumb"><img loading="lazy" src="img/29.png" alt=""></div>
       <div class="meat">
         <div class="kicker"><span class="num">29</span><img class="fav" loading="lazy" src="favicons/29.png" alt=""> TesterArmy <span class="badge op">Column</span><span class="score">▲ 118</span></div>
         <h2 class="hl">Launch HN: TesterArmy (YC P26) – Agents that test web and mobile apps</h2>
-        <div class="byline">Opinion · TesterArmy</div><p class="ex">TesterArmy continuously monitors the key journeys across your website and mobile app and alerts your team when something breaks. Takes less than 2 minutes. No credit card required. Make sure your product works, whether it&#x27;s an app or a website. Explore the key features that drive our partners growth, day after day. Paste your staging or production URL to set up a project and test your mobile apps, web apps, and…</p>
+        <div class="byline">Opinion · TesterArmy</div><p class="ex">TesterArmy continuously monitors the key journeys across your website and mobile app and alerts your team when something breaks. Takes less than 2 minutes. No credit card required. Make…</p>
         <span class="more">Read full story ↗</span>
       </div>
     </article>
-    <article class="card sec-opinion noimg">
-      <a class="hit" href="https://www.wired.com/story/sk-telecom-anthropic-mythos-export-controls/" target="_blank" rel="noopener"></a>
-      
-      <div class="meat">
-        <div class="kicker"><span class="num">24</span><img class="fav" loading="lazy" src="favicons/24.png" alt=""> WIRED <span class="badge op">Column</span><span class="score">▲ 112</span></div>
-        <h2 class="hl">The Korean telecom giant at the center of Anthropic&#x27;s Mythos controversy</h2>
-        <div class="byline">Opinion · WIRED</div><p class="ex">Full text unavailable (page blocked / paywalled). Follow the link to read at the source.</p>
-        <span class="more">Read full story ↗</span>
-      </div>
-    </article>
-    <article class="card sec-opinion noimg">
+    <article class="card sec-opinion t-standard w1 noimg">
       <a class="hit" href="https://mroczek.dev/articles/the-token-compression-illusion-why-im-skeptical-of-rtk/" target="_blank" rel="noopener"></a>
       
       <div class="meat">
         <div class="kicker"><span class="num">38</span><img class="fav" loading="lazy" src="favicons/38.png" alt=""> Przemek Mroczek <span class="badge op">Column</span><span class="score">▲ 99</span></div>
         <h2 class="hl">The Token Compression Illusion: Why I&#x27;m Skeptical of RTK</h2>
-        <div class="byline">Opinion · Przemek Mroczek</div><p class="ex">RTK&#x27;s pitch sounds like an absolute developer cheat code: &quot;Cut token usage, keep the same intelligence, pay 1/10 the price.&quot; With 60k GitHub stars and counting, the industry is clearly buying into the hype. But in the current dev tools gold rush, if something sounds too good to be true, it almost always is. While compressing terminal output for LLM agents sounds like a no-brainer, a closer look under the hood…</p>
+        <div class="byline">Opinion · Przemek Mroczek</div><p class="ex">RTK&#x27;s pitch sounds like an absolute developer cheat code: &quot;Cut token usage, keep the same intelligence, pay 1/10 the price.&quot; With 60k GitHub stars and counting, the industry is clearly…</p>
         <span class="more">Read full story ↗</span>
       </div>
     </article>
-    <article class="card sec-opinion">
+    <article class="card sec-opinion t-standard w1">
       <a class="hit" href="https://arun.is/blog/jr-logo/" target="_blank" rel="noopener"></a>
       <div class="thumb"><img loading="lazy" src="img/10.jpg" alt=""></div>
       <div class="meat">
@@ -449,106 +421,81 @@ need, and…</p>
         <h2 class="hl">How Japan&#x27;s railways stayed one while splitting apart</h2>
         <div class="byline">Opinion · Arun Venkatesan</div><p class="ex">On my first trip to Japan, I brought along a JR Rail Pass to take advantage of
 the subsidized rail transport for tourists. After riding the JR Yamanote Line
-and the Tōkaidō Shinkansen, I assumed JR must be a single national train system. But I soon learned it’s far from that. The Yamanote Line is run by the East
-Japan Railway Company — JR East — and the Tōkaidō Shinkansen by JR Central. And
-each of these JR…</p>
+and the Tōkaidō Shinkansen, I…</p>
         <span class="more">Read full story ↗</span>
       </div>
     </article>
-    <article class="card sec-opinion">
+    <article class="card sec-opinion t-standard w1">
       <a class="hit" href="https://www.theescapenewsletter.com/p/the-airpods-effect" target="_blank" rel="noopener"></a>
       <div class="thumb"><img loading="lazy" src="img/12.jpg" alt=""></div>
       <div class="meat">
         <div class="kicker"><span class="num">12</span><img class="fav" loading="lazy" src="favicons/12.png" alt=""> The Escape <span class="badge op">Column</span><span class="score">▲ 83</span></div>
         <h2 class="hl">The AirPods Effect</h2>
-        <div class="byline">Opinion · The Escape</div><p class="ex">A LITTLE TIME away can be clarifying. When you’ve had a break from a place, you’re able to see it with fresh eyes. You notice things that routine and familiarity had rendered invisible. During my last trip home to the U.S., one of the things that jumped out at me was the number of people with AirPods in their ears. Where I live, in southwest Germany, AirPods are far less common. It was jarring to see so many little…</p>
+        <div class="byline">Opinion · The Escape</div><p class="ex">A LITTLE TIME away can be clarifying. When you’ve had a break from a place, you’re able to see it with fresh eyes. You notice things that routine and familiarity had rendered invisible.…</p>
         <span class="more">Read full story ↗</span>
       </div>
     </article>
-    <article class="card sec-opinion">
+    <article class="card sec-opinion t-standard w1">
       <a class="hit" href="https://tim.blog/2024/02/09/harajuku-moment/" target="_blank" rel="noopener"></a>
       <div class="thumb"><img loading="lazy" src="img/48.jpg" alt=""></div>
       <div class="meat">
         <div class="kicker"><span class="num">48</span><img class="fav" loading="lazy" src="favicons/48.png" alt=""> Tim Ferriss <span class="badge op">Column</span><span class="score">▲ 76</span></div>
         <h2 class="hl">The Harajuku Moment (2024)</h2>
-        <div class="byline">Opinion · Tim Ferriss</div><p class="ex">“I must not fear. Fear is the mind-killer. Fear is the little-death that brings total obliteration. I will face my fear. I will permit it to pass over me and through me. And when it has gone past I will turn the inner eye to see its path. Where the fear has gone there will be nothing. Only I will remain.” — Bene Gesserit “Litany Against Fear” from Frank Herbert’s Dune “I must not fear. Fear is the mind-killer. Fear…</p>
+        <div class="byline">Opinion · Tim Ferriss</div><p class="ex">“I must not fear. Fear is the mind-killer. Fear is the little-death that brings total obliteration. I will face my fear. I will permit it to pass over me and through me. And when it has…</p>
         <span class="more">Read full story ↗</span>
       </div>
     </article>
-    <article class="card sec-opinion">
+    <article class="card sec-opinion t-standard w1">
       <a class="hit" href="https://dfdxlabs.com/research/2026/robotics-setup/" target="_blank" rel="noopener"></a>
       <div class="thumb"><img loading="lazy" src="img/13.jpg" alt=""></div>
       <div class="meat">
         <div class="kicker"><span class="num">13</span><img class="fav" loading="lazy" src="favicons/13.png" alt=""> dfdx Labs <span class="badge op">Column</span><span class="score">▲ 75</span></div>
         <h2 class="hl">Building a robotics research setup that lives next to my desk</h2>
-        <div class="byline">Opinion · dfdx Labs</div><p class="ex">Robotics research has become cheap and accessible enough that small teams, and even individuals, can now do meaningful research on real hardware. There are two reasons for this. First, capable robot hardware has become dramatically more affordable: the physical setup below uses an industrial-grade arm, two cameras, and a full teleoperation setup while staying below €5,000. 1 1 This figure excludes VAT and the cost…</p>
+        <div class="byline">Opinion · dfdx Labs</div><p class="ex">Robotics research has become cheap and accessible enough that small teams, and even individuals, can now do meaningful research on real hardware. There are two reasons for this. First,…</p>
         <span class="more">Read full story ↗</span>
       </div>
     </article>
-    <article class="card sec-opinion">
+    <article class="card sec-opinion t-standard w1">
       <a class="hit" href="https://mickael.canouil.fr/posts/2026-06-15-gribouille-0-3/" target="_blank" rel="noopener"></a>
       <div class="thumb"><img loading="lazy" src="img/06.png" alt=""></div>
       <div class="meat">
         <div class="kicker"><span class="num">06</span><img class="fav" loading="lazy" src="favicons/06.png" alt=""> Mickaël Canouil <span class="badge op">Column</span><span class="score">▲ 74</span></div>
         <h2 class="hl">Gribouille 0.3.0: A Grammar of Graphics for Typst</h2>
-        <div class="byline">Opinion · Mickaël Canouil</div><p class="ex">Another week, another Gribouille release. Gribouille 0.3.0 is narrower in scope than 0.2 , but it brings some wanted controls. The headline is guide control: a single argument now hides axis ticks and legends without touching the theme. Alongside that, compose() gains a theme: parameter, defer() replaces plot(..., defer: true) , geom-area() stacks by default, and annotate() can let marks overflow the panel.…</p>
+        <div class="byline">Opinion · Mickaël Canouil</div><p class="ex">Another week, another Gribouille release. Gribouille 0.3.0 is narrower in scope than 0.2 , but it brings some wanted controls. The headline is guide control: a single argument now hides…</p>
         <span class="more">Read full story ↗</span>
       </div>
     </article>
-    <article class="card sec-opinion noimg">
-      <a class="hit" href="http://paulbuchheit.blogspot.com/2010/02/if-your-product-is-great-it-doesnt-need.html" target="_blank" rel="noopener"></a>
-      
-      <div class="meat">
-        <div class="kicker"><span class="num">27</span><img class="fav" loading="lazy" src="favicons/27.png" alt=""> Paul Buchheit <span class="badge op">Column</span><span class="score">▲ 74</span></div>
-        <h2 class="hl">If your product is Great, it doesn&#x27;t need to be Good (2010)</h2>
-        <div class="byline">Opinion · Paul Buchheit</div><p class="ex">Full text unavailable (page blocked / paywalled). Follow the link to read at the source.</p>
-        <span class="more">Read full story ↗</span>
-      </div>
-    </article>
-    <article class="card sec-opinion">
+    <article class="card sec-opinion t-standard w1">
       <a class="hit" href="https://simonwillison.net/2026/Jun/18/datasette-apps/" target="_blank" rel="noopener"></a>
       <div class="thumb"><img loading="lazy" src="img/11.jpg" alt=""></div>
       <div class="meat">
         <div class="kicker"><span class="num">11</span><img class="fav" loading="lazy" src="favicons/11.png" alt=""> Simon Willison <span class="badge op">Column</span><span class="score">▲ 73</span></div>
         <h2 class="hl">Datasette Apps: Host custom HTML applications inside Datasette</h2>
-        <div class="byline">Opinion · Simon Willison</div><p class="ex">Today we launched a new plugin for Datasette, datasette-apps , with this launch announcement post on the Datasette project blog. That post has the what , but I’m going to expand on that a little bit here to provide the why . Datasette Apps are self-contained HTML+JavaScript applications that run in a tightly constrained &lt;iframe&gt; sandbox hosted on your Datasette application. They can use JavaScript to run read-only…</p>
+        <div class="byline">Opinion · Simon Willison</div><p class="ex">Today we launched a new plugin for Datasette, datasette-apps , with this launch announcement post on the Datasette project blog. That post has the what , but I’m going to expand on that a…</p>
         <span class="more">Read full story ↗</span>
       </div>
     </article>
-    <article class="card sec-opinion">
+    <article class="card sec-opinion t-standard w1">
       <a class="hit" href="https://www.jvm-weekly.com/p/project-valhalla-explained-how-a" target="_blank" rel="noopener"></a>
       <div class="thumb"><img loading="lazy" src="img/01.png" alt=""></div>
       <div class="meat">
         <div class="kicker"><span class="num">01</span><img class="fav" loading="lazy" src="favicons/01.png" alt=""> JVM Weekly <span class="badge op">Column</span><span class="score">▲ 72</span></div>
         <h2 class="hl">Project Valhalla, Explained: How a Decade of Work Arrives in JDK 28</h2>
-        <div class="byline">Opinion · JVM Weekly</div><p class="ex">On June 15, Oracle engineer Lois Foltan confirmed what a good chunk of the industry had stopped believing: JEP 401: Value Classes and Objects will be integrated into the main OpenJDK repository and is targeting JDK 28. Thanks for reading JVM Weekly! Subscribe for free to receive new posts and support my work. The change is so large that the remaining committers were asked to hold off on bigger commits during the…</p>
+        <div class="byline">Opinion · JVM Weekly</div><p class="ex">On June 15, Oracle engineer Lois Foltan confirmed what a good chunk of the industry had stopped believing: JEP 401: Value Classes and Objects will be integrated into the main OpenJDK…</p>
         <span class="more">Read full story ↗</span>
       </div>
     </article>
-    <article class="card sec-opinion noimg">
+    <article class="card sec-opinion t-standard w1 noimg">
       <a class="hit" href="https://agenticresourcediscovery.org/introduction/" target="_blank" rel="noopener"></a>
       
       <div class="meat">
         <div class="kicker"><span class="num">37</span><img class="fav" loading="lazy" src="favicons/37.png" alt=""> Agentic Resource Discovery <span class="badge op">Column</span><span class="score">▲ 68</span></div>
         <h2 class="hl">Agentic Resource Discovery Specification</h2>
-        <div class="byline">Opinion · Agentic Resource Discovery</div><p class="ex">AI clients are no longer limited to what the model knows. They can use external capabilities — tools, Skills, MCP servers, APIs, workflows, and other agents. We call these capabilities agentic resources . The number of agentic resources is already growing quickly. Some are public, some come from vendors, some are built inside companies; some are narrow tools for a single task, and others are agents or workflows that…</p>
+        <div class="byline">Opinion · Agentic Resource Discovery</div><p class="ex">AI clients are no longer limited to what the model knows. They can use external capabilities — tools, Skills, MCP servers, APIs, workflows, and other agents. We call these capabilities…</p>
         <span class="more">Read full story ↗</span>
       </div>
     </article>
-    <article class="card sec-opinion noimg">
-      <a class="hit" href="https://horizons.lambda-combine.net/" target="_blank" rel="noopener"></a>
-      
-      <div class="meat">
-        <div class="kicker"><span class="num">35</span><img class="fav" loading="lazy" src="favicons/35.png" alt=""> Lambda Combine <span class="badge op">Column</span><span class="score">▲ 49</span></div>
-        <h2 class="hl">Horizons JPL Solar System Data Demo and NASA DSN Updates: Datastar, Common Lisp</h2>
-        <div class="byline">Opinion · Lambda Combine</div><p class="ex">Click on a planet to see JPL Horizons details | NASA Deep Space Network logs 
-      update in the background (all antenas) Demo for Datastar + 
-       Common Lisp / by fsm ΛↃ 
-       lambda combine Click on a planet to see details...</p>
-        <span class="more">Read full story ↗</span>
-      </div>
-    </article>
-    <article class="card sec-opinion">
+    <article class="card sec-opinion t-standard w1">
       <a class="hit" href="https://mnot.net/blog/2026/well_known_uris" target="_blank" rel="noopener"></a>
       <div class="thumb"><img loading="lazy" src="img/03.jpg" alt=""></div>
       <div class="meat">
@@ -556,41 +503,31 @@ each of these JR…</p>
         <h2 class="hl">So You Want to Define a Well-Known URI</h2>
         <div class="byline">Opinion · Mark Nottingham</div><p class="ex">recent entries all entries feed Hi, I’m Mark Nottingham.
 I write about the Web, protocol design, HTTP, Internet governance, and more. This is a personal
-blog, it does not represent anyone else. Find out more . Comments? Let&#x27;s talk on Mastodon. @mnot@techpolicy.social The Nature of Internet Standards (series) No One Should Have That Much Power Monday, 29 April 2024 RFC 9518 - What Can Internet Standards Do About…</p>
+blog, it does not represent anyone…</p>
         <span class="more">Read full story ↗</span>
       </div>
     </article>
-    <article class="card sec-opinion">
+    <article class="card sec-opinion t-standard w1">
       <a class="hit" href="https://blog.jxmo.io/p/zen-and-the-art-of-machine-learning" target="_blank" rel="noopener"></a>
       <div class="thumb"><img loading="lazy" src="img/05.png" alt=""></div>
       <div class="meat">
         <div class="kicker"><span class="num">05</span><img class="fav" loading="lazy" src="favicons/05.png" alt=""> jxmo <span class="badge op">Column</span><span class="score">▲ 42</span></div>
         <h2 class="hl">Zen and the Art of Machine Learning Research</h2>
-        <div class="byline">Opinion · jxmo</div><p class="ex">So you want to do AI research? It’s true that no one really teaches you how. Not directly, anyway. But it turns out that the way to get started is pretty simple: some combination of (i) reading and (ii) building stuff.  You can’t do one without the other. You become a researcher through the combination. It turns out the process of becoming a great researcher is not unlike learning to meditate: The way to get started…</p>
+        <div class="byline">Opinion · jxmo</div><p class="ex">So you want to do AI research? It’s true that no one really teaches you how. Not directly, anyway. But it turns out that the way to get started is pretty simple: some combination of (i)…</p>
         <span class="more">Read full story ↗</span>
       </div>
     </article>
-    <article class="card sec-opinion noimg">
-      <a class="hit" href="https://pypi.org/project/prylint/" target="_blank" rel="noopener"></a>
-      
-      <div class="meat">
-        <div class="kicker"><span class="num">09</span><img class="fav" loading="lazy" src="favicons/09.png" alt=""> PyPI <span class="badge op">Column</span><span class="score">▲ 19</span></div>
-        <h2 class="hl">Fable Converted Pylint to Rust</h2>
-        <div class="byline">Opinion · PyPI</div><p class="ex">Full text unavailable (page blocked / paywalled). Follow the link to read at the source.</p>
-        <span class="more">Read full story ↗</span>
-      </div>
-    </article>
-    <article class="card sec-opinion">
+    <article class="card sec-opinion t-standard w1">
       <a class="hit" href="https://www.macrumors.com/2026/06/18/a12-and-a13-chips-facing-exploit/" target="_blank" rel="noopener"></a>
       <div class="thumb"><img loading="lazy" src="img/46.jpg" alt=""></div>
       <div class="meat">
         <div class="kicker"><span class="num">46</span><img class="fav" loading="lazy" src="favicons/46.png" alt=""> MacRumors <span class="badge op">Column</span><span class="score">▲ 19</span></div>
         <h2 class="hl">Apple A12 and A13 Chips: New Unpatchable Exploit</h2>
-        <div class="byline">Opinion · MacRumors</div><p class="ex">Security research firm Paradigm Shift today published details of a new BootROM vulnerability affecting Apple&#x27;s A12 and A13 chips, along with a working proof-of-concept exploit named &quot;usbliter8.&quot; The BootROM, or SecureROM, is the first code an iPhone runs when it powers on. Because it is baked directly into the chip at manufacture, any vulnerability found there cannot be fixed with a software update, meaning affected…</p>
+        <div class="byline">Opinion · MacRumors</div><p class="ex">Security research firm Paradigm Shift today published details of a new BootROM vulnerability affecting Apple&#x27;s A12 and A13 chips, along with a working proof-of-concept exploit named…</p>
         <span class="more">Read full story ↗</span>
       </div>
     </article>
-    <article class="card sec-opinion">
+    <article class="card sec-opinion t-standard w1">
       <a class="hit" href="https://akse3d-en.skaperiet.no" target="_blank" rel="noopener"></a>
       <div class="thumb"><img loading="lazy" src="img/39.png" alt=""></div>
       <div class="meat">
@@ -598,62 +535,39 @@ blog, it does not represent anyone else. Find out more . Comments? Let&#x27;s ta
         <h2 class="hl">Akse3D – open-source 3D modelling anyone can master</h2>
         <div class="byline">Opinion · Skaperiet</div><p class="ex">A 3D tool for the maker space Akse is a 3D modelling tool made for kids and teens.
           Combine primitive shapes, draw your own 2D blueprints
-          — and export the model as an STL file, ready for the 3D printer. ✓ STL export for 3D printing Akse means axis — as in X, Y and Z. That&#x27;s the whole idea:
-          a tool where kids and teens learn to think in three dimensions, without
-          drowning in…</p>
+          — and export the model as an STL…</p>
         <span class="more">Read full story ↗</span>
       </div>
-    </article>
-    <article class="card sec-opinion noimg">
-      <a class="hit" href="https://raku.foundation" target="_blank" rel="noopener"></a>
-      
-      <div class="meat">
-        <div class="kicker"><span class="num">23</span><img class="fav" loading="lazy" src="favicons/23.png" alt=""> The Raku Foundation <span class="badge op">Column</span><span class="score">▲ 14</span></div>
-        <h2 class="hl">The Raku Foundation is born</h2>
-        <div class="byline">Opinion · The Raku Foundation</div><p class="ex">On 1 May 2026, a legal entity for The Raku Foundation was registered in the Netherlands.  A Stichting with registration number 42050836. Community feedback shaped the formation; the aim throughout has been a member-driven organisation with annual elections and the -Ofun paradigm at its heart. It is going to take a little time for the Executive Board to put in place the registration of Raku community members and…</p>
-        <span class="more">Read full story ↗</span>
-      </div>
-    </article>
-    <article class="card sec-opinion noimg">
-      <a class="hit" href="https://bangalore-property-buy-vs-rent.pagey.site/" target="_blank" rel="noopener"></a>
-      
-      <div class="meat">
-        <div class="kicker"><span class="num">41</span><img class="fav" loading="lazy" src="favicons/41.png" alt=""> Buy vs Rent (Bangalore) <span class="badge op">Column</span><span class="score">▲ 6</span></div>
-        <h2 class="hl">Renting vs. Buying – A case study for Bangalore</h2>
-        <div class="byline">Opinion · Buy vs Rent (Bangalore)</div><p class="ex">Full text unavailable (page blocked / paywalled). Follow the link to read at the source.</p>
-        <span class="more">Read full story ↗</span>
-      </div>
-    </article></div></section><section class="zone show"><div class="sechead"><h3>Show & Tell</h3><span class="secdesc">“Show HN” — things people built and shipped</span><span class="seccount">3 items</span></div><div class="grid">
-    <article class="card sec-show">
-      <a class="hit" href="https://www.intheweights.com/" target="_blank" rel="noopener"></a>
-      <div class="thumb"><img loading="lazy" src="img/26.png" alt=""></div>
-      <div class="meat">
-        <div class="kicker"><span class="num">26</span><img class="fav" loading="lazy" src="favicons/26.png" alt=""> In the Weights <span class="badge show">Show HN</span><span class="score">▲ 336</span></div>
-        <h2 class="hl">Show HN: Are You in the Weights?</h2>
-        <p class="ex">Full text unavailable (page blocked / paywalled). Follow the link to read at the source.</p>
-        <span class="more">Read full story ↗</span>
-      </div>
-    </article>
-    <article class="card sec-show">
+    </article><article class="card w-all brief-block"><div class="meat"><div class="brief-h">In Brief</div><a class="brief-item" href="https://www.independent.co.uk/us/money/craigslist-multimillionaire-craig-newmark-b2980681.html" target="_blank" rel="noopener">
+       <span class="bt">The founder of Craigslist has given away half a billion dollars</span><span class="bs">▲360 · The Independent</span></a><a class="brief-item" href="https://twitter.com/NoamShazeer/status/2067400851438932297" target="_blank" rel="noopener">
+       <span class="bt">Noam Shazeer Joins OpenAI</span><span class="bs">▲326 · X</span></a><a class="brief-item" href="https://www.wired.com/story/sk-telecom-anthropic-mythos-export-controls/" target="_blank" rel="noopener">
+       <span class="bt">The Korean telecom giant at the center of Anthropic&#x27;s Mythos controversy</span><span class="bs">▲112 · WIRED</span></a><a class="brief-item" href="http://paulbuchheit.blogspot.com/2010/02/if-your-product-is-great-it-doesnt-need.html" target="_blank" rel="noopener">
+       <span class="bt">If your product is Great, it doesn&#x27;t need to be Good (2010)</span><span class="bs">▲74 · Paul Buchheit</span></a><a class="brief-item" href="https://horizons.lambda-combine.net/" target="_blank" rel="noopener">
+       <span class="bt">Horizons JPL Solar System Data Demo and NASA DSN Updates: Datastar, Common Lisp</span><span class="bs">▲49 · Lambda Combine</span></a><a class="brief-item" href="https://pypi.org/project/prylint/" target="_blank" rel="noopener">
+       <span class="bt">Fable Converted Pylint to Rust</span><span class="bs">▲19 · PyPI</span></a><a class="brief-item" href="https://raku.foundation" target="_blank" rel="noopener">
+       <span class="bt">The Raku Foundation is born</span><span class="bs">▲14 · The Raku Foundation</span></a><a class="brief-item" href="https://bangalore-property-buy-vs-rent.pagey.site/" target="_blank" rel="noopener">
+       <span class="bt">Renting vs. Buying – A case study for Bangalore</span><span class="bs">▲6 · Buy vs Rent (Bangalore)</span></a></div></article></div></section><section class="zone show"><div class="sechead"><h3>Show & Tell</h3><span class="secdesc">“Show HN” — things people built and shipped</span><span class="seccount">3 items</span></div><div class="grid">
+    <article class="card sec-show t-feature w2">
       <a class="hit" href="https://gerrymandle.cc/" target="_blank" rel="noopener"></a>
       <div class="thumb"><img loading="lazy" src="img/34.png" alt=""></div>
       <div class="meat">
         <div class="kicker"><span class="num">34</span><img class="fav" loading="lazy" src="favicons/34.png" alt=""> Gerrymandle <span class="badge show">Show HN</span><span class="score">▲ 173</span></div>
         <h2 class="hl">Show HN: Gerrymandle - Daily puzzle game where you redraw electoral districts</h2>
-        <p class="ex">You are in charge of drawing the district lines for the elections. Click adjacent tiles on the map to group them into a district. Each district must be one connected shape, no islands allowed. Coloured houses show where voters live. Not every tile on the board has one, some are just empty land. A party wins a district by having more houses in it than any other party. If two parties tie in a district, nobody wins it.…</p>
+        <p class="ex">You are in charge of drawing the district lines for the elections. Click adjacent tiles on the map to group them into a district. Each district must be one connected shape, no islands allowed. Coloured houses show where voters live. Not every tile on the board has one, some are just empty land. A party wins a district by having more…</p>
         <span class="more">Read full story ↗</span>
       </div>
     </article>
-    <article class="card sec-show">
+    <article class="card sec-show t-standard w1">
       <a class="hit" href="https://github.com/cajal-technologies/talos" target="_blank" rel="noopener"></a>
       <div class="thumb"><img loading="lazy" src="img/17.jpg" alt=""></div>
       <div class="meat">
         <div class="kicker"><span class="num">17</span><img class="fav" loading="lazy" src="favicons/17.png" alt=""> GitHub <span class="badge show">Show HN</span><span class="score">▲ 51</span></div>
         <h2 class="hl">Show HN: Talos – Open-source WASM interpreter for Lean</h2>
-        <p class="ex">Talos is a WebAssembly interpreter written in Lean 4, named after the bronze giant of Greek mythology who guarded Crete — a mechanical guardian, built to enforce rules. The same definitions that execute a Wasm program are the ones you reason about . There is no separate spec interpreter to keep in sync: evaluation and proof share a single codebase. Work in progress. Talos is under active development. APIs and proof…</p>
+        <p class="ex">Talos is a WebAssembly interpreter written in Lean 4, named after the bronze giant of Greek mythology who guarded Crete — a mechanical guardian, built to enforce rules. The same definitions…</p>
         <span class="more">Read full story ↗</span>
       </div>
-    </article></div></section><section class="zone hiring"><div class="sechead"><h3>The Classifieds</h3><span class="secdesc">Who’s hiring</span><span class="seccount">1 item</span></div><div class="classifieds"><a class="job" href="https://www.flexport.com/company/careers/" target="_blank" rel="noopener">
+    </article><article class="card w-all brief-block"><div class="meat"><div class="brief-h">In Brief</div><a class="brief-item" href="https://www.intheweights.com/" target="_blank" rel="noopener">
+       <span class="bt">Show HN: Are You in the Weights?</span><span class="bs">▲336 · In the Weights</span></a></div></article></div></section><section class="zone hiring"><div class="sechead"><h3>The Classifieds</h3><span class="secdesc">Who’s hiring</span><span class="seccount">1 item</span></div><div class="classifieds"><a class="job" href="https://www.flexport.com/company/careers/" target="_blank" rel="noopener">
        <span class="jt">Flexport (YC W14) Is Hiring in Indonesia, India, and Thailand</span><span class="jd">flexport.com · ▲1</span></a></div></section>
   <div class="foot">THE HACKER TIMES — auto-generated from the Hacker News API · Friday, June 19, 2026 ·
   News 13 · Opinion 33 · Show HN 3 · Hiring 1 · 37/20 illustrated</div>

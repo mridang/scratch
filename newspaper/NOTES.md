@@ -20,3 +20,4 @@ Running notes of what was asked for, newest at the bottom.
 16. Keep a running notes file of requests (this file).
 17. Add a favicon per article.
 18. Make it a PWA — manifest, icons, service worker (offline + installable).
+19. Generative, content-driven layout: weight(score,image,length) -> tier (lead/feature/standard/brief) -> lane span + copyfit char budget + line-clamp; weak tail collapses into an In Brief rail. Layout recomputes per run.
