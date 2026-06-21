@@ -1,0 +1,137 @@
+
+:root{--lane:240px;--gap:18px;}
+/* ===== FT theme (default) ===== */
+:root,html[data-theme="ft"]{
+  --paper:#FFF1E5;--ink:#262A33;--accent:#990F3D;--rule:#e6d7c9;--muted:#66605c;
+  --op:#0F5499;--show:#0D7680;--hire:#9A6A00;
+  --mastbg:#990F3D;--masttext:#FFF1E5;--mastrule:rgba(255,241,229,.55);--themecolor:#990F3D;
+  --serif:"Source Serif 4",Georgia,'Times New Roman',serif;--mastweight:900;--mastflag:none;
+}
+/* ===== Economist theme ===== */
+html[data-theme="economist"]{
+  --paper:#ffffff;--ink:#121212;--accent:#E3120B;--rule:#dcdcdc;--muted:#5c5c5c;
+  --op:#1F4E79;--show:#0D7680;--hire:#9A6A00;
+  --mastbg:#E3120B;--masttext:#ffffff;--mastrule:rgba(255,255,255,.6);--themecolor:#E3120B;
+  --serif:"Lora",Georgia,'Times New Roman',serif;--mastweight:700;--mastflag:block;
+}
+*{box-sizing:border-box;min-width:0;}
+html,body{max-width:100%;overflow-x:hidden;}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--serif);transition:background .2s,color .2s;}
+img{max-width:100%;}
+.hl,.ex,.kicker,.jt,.jd{overflow-wrap:anywhere;word-break:break-word;}
+.wrap{max-width:1320px;margin:0 auto;padding:0 18px 70px;}
+header.mast{text-align:center;padding:18px 0 10px;border-bottom:3px double var(--mastrule);margin-bottom:6px;background:var(--mastbg);color:var(--masttext);transition:background .2s,color .2s;}
+.mast .row{display:flex;flex-wrap:wrap;gap:4px 14px;justify-content:space-between;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--masttext);opacity:.75;max-width:1320px;margin:0 auto;padding:0 18px;}
+@media(max-width:520px){.mast .row{justify-content:center;}.mast .row span:nth-child(2){display:none;}}
+.mast h1{font-family:var(--serif);font-weight:var(--mastweight);font-size:clamp(40px,8vw,92px);letter-spacing:-1px;margin:6px 0 2px;line-height:.95;color:var(--masttext);}
+.mast .tag{font-style:italic;font-size:14px;margin:2px 0 10px;opacity:.85;}
+.mast .date{display:flex;justify-content:center;gap:18px;flex-wrap:wrap;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;border-top:1px solid var(--mastrule);border-bottom:1px solid var(--mastrule);padding:5px 0;max-width:1320px;margin:8px auto 0;color:var(--masttext);}
+/* theme switcher */
+.switcher{display:flex;justify-content:center;gap:0;margin:12px auto 4px;border:1px solid var(--mastrule);border-radius:999px;width:max-content;overflow:hidden;}
+.switcher button{font-family:var(--serif);font-size:12px;letter-spacing:1px;text-transform:uppercase;padding:5px 16px;background:transparent;color:var(--masttext);border:none;cursor:pointer;transition:background .15s,color .15s;}
+.switcher button[aria-pressed="true"]{background:var(--masttext);color:var(--mastbg);font-weight:700;}
+.installbar{margin:9px 0 2px;}
+.install{font-family:var(--serif);font-size:12px;letter-spacing:.5px;text-transform:uppercase;font-weight:700;padding:7px 18px;background:var(--masttext);color:var(--mastbg);border:none;border-radius:999px;cursor:pointer;}
+.install[hidden]{display:none;}
+.zone{margin-top:34px;}
+.sechead{display:flex;align-items:baseline;gap:14px;border-bottom:2px solid var(--ink);padding-bottom:6px;margin-bottom:18px;flex-wrap:wrap;}
+.sechead h3{font-family:Georgia,serif;font-weight:900;font-size:26px;margin:0;letter-spacing:.5px;text-transform:uppercase;}
+.secdesc{font-style:italic;color:var(--muted);font-size:13px;flex:1;min-width:160px;}
+.seccount{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);}
+.zone.opinion .sechead h3{color:var(--op);} .zone.show .sechead h3{color:var(--show);} .zone.hiring .sechead h3{color:var(--hire);}
+
+/* ===== LAYOUT ENGINE =====
+   Universal fallback: multicolumn masonry. */
+.grid{columns:var(--lane);column-gap:var(--gap);}
+.card{break-inside:avoid;margin:0 0 var(--gap);}
+.card.w-all,.card.t-lead{column-span:all;}
+
+/* Mobile: shrink lanes so TWO columns fit again (newspaper density) */
+@media(max-width:600px){:root{--lane:150px;--gap:12px;}}
+
+/* CSS Grid Level 3 — "grid lanes" (Safari Tech Preview / iOS): real masonry packing + lane spanning */
+@supports (display:grid-lanes){
+  .grid{display:grid-lanes;columns:initial;grid-template-columns:repeat(auto-fill,minmax(var(--lane),1fr));gap:var(--gap);}
+  .card{margin:0;}
+  .card.w-all,.card.t-lead{column-span:initial;}
+  .card.w2{grid-column:span 2;} .card.w3{grid-column:span 3;} .card.w4{grid-column:span 4;}
+  .card.w-all{grid-column:1/-1;}
+  @media(max-width:900px){.card.w3,.card.w4{grid-column:span 2;}}
+  @media(max-width:600px){.card.w2,.card.w3,.card.w4{grid-column:1/-1;}}
+}
+/* Standard masonry syntax (Firefox flag / future browsers) */
+@supports (grid-template-rows:masonry){
+  .grid{display:grid;columns:initial;grid-template-columns:repeat(auto-fill,minmax(var(--lane),1fr));grid-template-rows:masonry;gap:var(--gap);}
+  .card{margin:0;}
+  .card.w-all,.card.t-lead{column-span:initial;}
+  .card.w2{grid-column:span 2;} .card.w3{grid-column:span 3;} .card.w4{grid-column:span 4;}
+  .card.w-all{grid-column:1/-1;}
+  @media(max-width:900px){.card.w3,.card.w4{grid-column:span 2;}}
+  @media(max-width:600px){.card.w2,.card.w3,.card.w4{grid-column:1/-1;}}
+}
+@supports (display:masonry){
+  .grid{display:masonry;columns:initial;grid-template-columns:repeat(auto-fill,minmax(var(--lane),1fr));gap:var(--gap);}
+  .card{margin:0;}
+  .card.w-all,.card.t-lead{column-span:initial;}
+  .card.w2{grid-column:span 2;} .card.w3{grid-column:span 3;} .card.w4{grid-column:span 4;}
+  .card.w-all{grid-column:1/-1;}
+  @media(max-width:900px){.card.w3,.card.w4{grid-column:span 2;}}
+  @media(max-width:600px){.card.w2,.card.w3,.card.w4{grid-column:1/-1;}}
+}
+
+/* ===== FLAT STORY STYLE (no boxes) ===== */
+.card{position:relative;background:none;border:none;border-radius:0;box-shadow:none;
+ padding-top:14px;border-top:1px solid var(--rule);}
+.card:hover .hl{color:var(--accent);}
+.hit{position:absolute;inset:0;z-index:3;}
+.ph{margin:0 0 10px;line-height:0;}
+.ph img{width:100%;height:auto;display:block;}
+.meat{padding:0;}
+.meat::after{content:"";display:table;clear:both;}   /* contain floated images */
+.kicker{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);display:flex;align-items:center;gap:6px;margin-bottom:6px;flex-wrap:wrap;}
+.kicker .num{color:var(--accent);font-weight:700;}
+.kicker .fav{width:14px;height:14px;border-radius:2px;object-fit:contain;vertical-align:middle;flex:0 0 auto;}
+.kicker .score{margin-left:auto;color:var(--accent);font-weight:700;}
+.badge{font-weight:700;letter-spacing:.5px;font-size:9px;text-transform:uppercase;}
+.badge.op{color:var(--op);} .badge.show{color:var(--show);} .badge.hire{color:var(--hire);}
+.hl{font-size:20px;line-height:1.15;margin:2px 0 6px;font-weight:700;text-wrap:balance;transition:color .12s;}
+.byline{font-size:11px;font-style:italic;color:var(--op);margin-bottom:6px;}
+.ex{font-size:13px;line-height:1.5;color:#3a342a;margin:0 0 8px;text-align:justify;hyphens:auto;}
+.sec-opinion .ex{font-style:italic;}
+.more{font-size:11px;font-weight:700;letter-spacing:.5px;color:var(--accent);text-transform:uppercase;}
+
+/* ===== TIER STYLES — prominence assigned by weight(), space-then-text ===== */
+.card.t-lead{border-top:3px solid var(--ink);padding-top:16px;}
+.card.t-lead .hl{font-size:clamp(26px,3.2vw,42px);line-height:1.04;}
+.card.t-lead .ex{font-size:15px;}
+.card.t-feature{border-top:2px solid var(--ink);}
+.card.t-feature .hl{font-size:clamp(20px,2vw,27px);line-height:1.1;}
+.card.t-feature .ex{font-size:14px;}
+/* Newspaper text-wrap: in big stories the photo floats and the copy flows around it */
+.card.t-lead .ph,.card.t-feature .ph{width:48%;float:right;margin:4px 0 10px 20px;}
+.card.t-lead .ph.ph-l,.card.t-feature .ph.ph-l{float:left;margin:4px 20px 10px 0;}
+@media(max-width:600px){
+  .card.t-feature{column-span:all;}   /* features become full-width bands so the wrap has room */
+  .card.t-lead .ph,.card.t-feature .ph{width:44%;margin:3px 0 8px 14px;}
+  .card.t-lead .ph.ph-l,.card.t-feature .ph.ph-l{margin:3px 14px 8px 0;}
+}
+.card.t-standard .hl{font-size:19px;}
+/* Copyfit guarantee: clamp non-lead excerpts so text can never overflow its cell */
+.card.t-feature .ex,.card.t-standard .ex{display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;}
+.card.t-feature .ex{-webkit-line-clamp:7;}
+.card.t-standard .ex{-webkit-line-clamp:6;}
+.card.t-standard .hl{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;overflow:hidden;}
+
+/* In Brief rail — the low-weight tail, as a real newspaper NIB column */
+.card.brief-block{border-top:3px double var(--ink);padding-top:12px;}
+.brief-h{font-family:Georgia,serif;font-weight:900;text-transform:uppercase;letter-spacing:1px;font-size:14px;margin:0 0 6px;}
+.brief-item{position:relative;z-index:4;display:flex;justify-content:space-between;gap:14px;align-items:baseline;padding:7px 0;border-top:1px solid var(--rule);text-decoration:none;color:var(--ink);}
+.brief-item:hover .bt{color:var(--accent);}
+.bt{font-weight:700;font-size:14px;line-height:1.2;}
+.bs{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;flex:0 0 auto;}
+
+.classifieds{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:0;}
+.job{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-top:1px solid var(--rule);text-decoration:none;color:var(--ink);}
+.job:hover .jt{color:var(--accent);} .jt{font-weight:700;font-size:14px;} .jd{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;}
+.foot{text-align:center;font-size:11px;color:var(--muted);margin-top:40px;border-top:3px double var(--ink);padding-top:14px;}
+.enginenote{text-align:center;font-size:10px;color:var(--muted);margin-top:6px;font-style:italic;}

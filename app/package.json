@@ -1,0 +1,12 @@
+{
+  "name": "hacker-times-app",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "The Hacker Times — Google login, per-user RSS feeds, daily scrape, generative newspaper UI. Zero dependencies (Node built-ins only).",
+  "engines": { "node": ">=22.5" },
+  "scripts": {
+    "start": "node server.mjs",
+    "scrape": "node server.mjs scrape"
+  }
+}
