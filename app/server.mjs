@@ -16,12 +16,26 @@ const DEFAULT_FEEDS = [
   ['https://simonwillison.net/atom/everything/', 'Simon Willison'],
   ['https://jvns.ca/atom.xml', 'Julia Evans'],
 ];
+// Feeds shown to logged-out visitors — a normal Hacker News paper
+const PUBLIC_FEEDS = [
+  ['https://hnrss.org/frontpage', 'Hacker News'],
+  ['https://hnrss.org/best', 'HN — Best of the Week'],
+];
 function seedDefaults(userId) {
   if (db.listFeeds(userId).length) return;
   for (const [url, title] of DEFAULT_FEEDS) {
     const f = db.addFeed(userId, url, title);
     refreshFeed(f).catch(() => {});   // warm it in the background
   }
+}
+
+// The public (logged-out) edition is backed by a hidden system user.
+let PUBLIC_ID = null;
+function ensurePublic() {
+  const u = db.upsertUser({ sub: '__public__', email: 'public', name: 'Hacker News', picture: '' });
+  PUBLIC_ID = u.id;
+  if (!db.listFeeds(PUBLIC_ID).length)
+    for (const [url, title] of PUBLIC_FEEDS) { const f = db.addFeed(PUBLIC_ID, url, title); refreshFeed(f).catch(() => {}); }
 }
 
 // ---- signed-cookie sessions ----
@@ -59,7 +73,7 @@ const server = http.createServer(async (req, res) => {
 
     // --- pages ---
     if (m === 'GET' && p === '/') {
-      const feeds = user ? db.listFeeds(user.id) : [];
+      const feeds = db.listFeeds(user ? user.id : PUBLIC_ID);   // logged-out → public HN edition
       const sections = feeds.map(feed => ({ feed, articles: db.feedArticles(feed.id) }));
       return send(res, 200, renderPaper(user, sections));
     }
@@ -126,6 +140,7 @@ if (process.argv[2] === 'scrape') {
 } else {
   server.listen(PORT, () => {
     console.log(`The Hacker Times → http://localhost:${PORT}  (Google OAuth: ${auth.oauthConfigured() ? 'on' : 'OFF — dev login enabled'})`);
+    ensurePublic();   // seed + warm the public Hacker News edition
     scheduleDaily();
   });
 }
