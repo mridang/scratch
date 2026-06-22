@@ -222,3 +222,105 @@ In `mridang/scratch`, branch `claude/new-session-y9u2vv`:
 - [ ] **Two columns on mobile**, no horizontal scroll; works in Chrome (multicol fallback).
 - [ ] FT/Economist theme switcher with correct fonts/palettes and **dynamic theme-color**.
 - [ ] (Optional) PWA with a **safe** service worker.
+
+---
+
+## Appendix A — Scraping & summarisation pipeline (exact behaviour)
+
+This is the "how" behind §2 and §6. Replicate it on Cloudflare (all of it is `fetch` + string work,
+so it ports directly; only storage/scheduling change).
+
+### A.1 Fetching mechanics
+- HTTP GET with a **browser User-Agent**, `redirect: follow`, and an **AbortController timeout**
+  (~15 s for feeds, ~12 s for article pages). Network failures return empty string, never throw.
+- **Concurrency:** refresh ~6 feeds in parallel; within a feed, enrich the newest ~10 article pages
+  in parallel.
+- **Caps:** keep **MAX_PER_FEED = 14** items per feed; fetch og:image for the newest **ENRICH = 10**.
+- On each refresh, **replace** that feed's article rows (delete + insert) so the paper reflects the
+  feed's current state.
+
+### A.2 Two source shapes
+- **HN API (the original mode):** `GET topstories.json` → take the first N ids → `GET item/<id>.json`
+  for each → `{title, url, score, by, time}`. For Ask/Show/self posts with no `url`, fall back to the
+  HN permalink `news.ycombinator.com/item?id=<id>`. `score` feeds `weight()` directly.
+- **RSS/Atom (the current mode):** fetch the feed XML and parse (A.3).
+
+### A.3 RSS/Atom parsing (dependency-free, regex-based)
+- Feed `title` = first `<title>`.
+- Items = matches of `<item>…</item>` (RSS 2.0) **or** `<entry>…</entry>` (Atom).
+- Per item:
+  - `link` = `<link>` text, else Atom `<link href="…">`.
+  - `title` = `<title>`.
+  - `published` = first of `pubDate | published | updated | dc:date` → parse to ISO (blank if invalid).
+  - `summary` = first of `description | summary | content`, capped ~1200 chars.
+  - `source` = hostname of the link (see A.6); `favicon` = Google s2 (A.7).
+- A `decode()` helper: unwrap `<![CDATA[…]]>`, unescape HTML entities (`&amp; &lt; &gt; &quot; &#39;
+  &nbsp;`), strip tags, collapse whitespace.
+
+### A.4 Article-page scraping (enrichment of the newest items)
+- Fetch the article URL's HTML, then extract:
+  - **og:image:** first `<meta property|name>` in `[og:image, og:image:url, twitter:image]`; resolve
+    relative URLs against the article URL. (The static build also had an inline-`<img>` fallback that
+    skipped `logo|icon|avatar|sprite|pixel|blank|spacer|1x1`.)
+  - **summary fallback:** `<meta name="description">` when the feed gave none.
+  - **(static newspaper full-text):** BeautifulSoup — drop `script/style/nav/footer/header/aside/
+    form/svg/button`; prefer `<article>`→`<main>`→`<body>`; collect `h1–h4/p/li/blockquote/pre` text;
+    **if < 400 chars, fall back to whole-`<body>` extraction**. The resulting `text_len` is stored and
+    used by `weight()` (the "thin content" penalty) and copyfitting.
+
+### A.5 "Summaries" — what they actually are (important clarification)
+- **They are extractive, not AI-generated.** The excerpt under each headline is the **scraped text**
+  (RSS `description`/`content`, or page paragraphs) **trimmed to the tier's character budget at a word
+  boundary** ("copyfitting"), then `-webkit-line-clamp`'d as a hard overflow guard. **There is no LLM
+  summarisation in the current build.**
+- Budgets: **lead 620, feature 340, standard 190, brief 0** (headline only). Trim = cut to N chars,
+  drop the trailing partial word, append "…".
+- **Option (recommended if real summaries are wanted):** add **one batched LLM call per refresh** to
+  write tight, tier-length summaries (Claude — `claude-opus-4-8`, or Haiku for cost). Keep the
+  extractive excerpt as the fallback when the LLM is unavailable. (We already use an LLM for source
+  names, so this is the same pattern.)
+
+### A.6 Source-name resolution algorithm (§6 in detail)
+Priority: **curated override map → `og:site_name` (then `application-name`, JSON-LD `publisher.name`)
+→ `domain_clean(host)`**.
+`domain_clean`:
+1. If the registrable domain is a **blog platform** (`blogspot.com, substack.com, medium.com,
+   wordpress.com, github.io, pages.dev, netlify.app, vercel.app, tumblr.com`) → use the **subdomain
+   label** (e.g. `paulbuchheit.blogspot.com → Paul Buchheit`).
+2. Else strip leading `www/blog/news/m/en/docs/about/status/...` subdomains.
+3. If the second-to-last label is a **multi-part-TLD token** (`co, ac, org, gov, com, net, edu, …`)
+   use the **third-from-last** label (so `independent.co.uk → Independent`).
+4. Title-case, tidy whitespace, cap length.
+For the 50 HN items this was done **by an LLM** (Claude reading `domain + title` → canonical name,
+e.g. `cs.cornell.edu → Cornell University`). Replicate with a **single batched LLM call**; the
+algorithm above is the deterministic fallback.
+
+### A.7 Favicons & images — storage choice
+- **Favicon:** `https://www.google.com/s2/favicons?sz=64&domain=<host>`, rendered ~14 px beside the
+  source name.
+- **Static site** *downloaded and bundled* og:images (`newspaper/img/`) and favicons
+  (`newspaper/favicons/`) so the page works offline.
+- **Dynamic app** *hotlinks* the og:image and favicon (no storage).
+- **On Cloudflare:** hotlinking is fine; if you want resilience/perf, cache images to **R2** and serve
+  from there (optional).
+
+### A.8 Weight → tier → copyfit (exact formulas)
+- `weight(a) = ln(score+1)` `+0.6 if a.image` `×0.6 if text_len < 300`. **For RSS use recency**
+  (sort newest-first; newest ≈ highest weight) in place of `score`.
+- `assignTiers(items sorted by weight/recency desc; n = count)`:
+  - `i==0 && n>=5` → **lead**
+  - `r = weight/lead_weight`; `r>=0.66 && features<max(1, floor(n/6)) && text>=300` → **feature**
+  - `(r<=0.42 || text<150) && i >= n*0.5` → **brief**
+  - else → **standard**
+- `tier → (laneSpan, charBudget)`: `lead(3,620) feature(2,340) standard(1,190) brief(1,0)`.
+- `excerpt(text, budget)`: concatenate paragraphs until ≥ budget, cut to budget at a word boundary,
+  add "…". CSS clamp guarantees fit: lead = budgeted (no clamp, may be 2-col on wide screens),
+  feature `-webkit-line-clamp:7`, standard `:6`, standard headline `:4`.
+
+### A.9 Daily refresh
+- **Static:** a Python pipeline (`build_lanes.py` + scrapers in the repo history) regenerates
+  `newspaper/` on demand.
+- **Dynamic Node:** `scheduleDaily()` fires at **06:00** server time + manual `POST /api/refresh` +
+  CLI `node server.mjs scrape`.
+- **Cloudflare (target):** a **Cron Trigger** `scheduled` handler iterates all feeds in D1 and runs
+  the A.1–A.4 refresh for each. Keep `POST /api/refresh` for manual/testing.
